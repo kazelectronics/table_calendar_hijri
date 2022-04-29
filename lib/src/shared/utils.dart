@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/widgets.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 /// Signature for a function that creates a widget for a given `day`.
-typedef DayBuilder = Widget? Function(BuildContext context, DateTime day);
+typedef DayBuilder = Widget? Function(BuildContext context, HijriAndGregorianDate day);
 
 /// Signature for a function that creates a widget for a given `day`.
 /// Additionally, contains the currently focused day.
 typedef FocusedDayBuilder = Widget? Function(
-    BuildContext context, DateTime day, DateTime focusedDay);
+    BuildContext context, HijriAndGregorianDate day, HijriAndGregorianDate focusedDay);
 
 /// Signature for a function returning text that can be localized and formatted with `DateFormat`.
-typedef TextFormatter = String Function(DateTime date, dynamic locale);
+typedef TextFormatter = String Function(HijriAndGregorianDate date, dynamic locale);
 
 /// Gestures available for the calendar.
 enum AvailableGestures { none, verticalSwipe, horizontalSwipe, all }
@@ -39,16 +40,21 @@ int getWeekdayNumber(StartingDayOfWeek weekday) {
 }
 
 /// Returns `date` in UTC format, without its time part.
-DateTime normalizeDate(DateTime date) {
-  return DateTime.utc(date.year, date.month, date.day);
+HijriAndGregorianDate normalizeDate(HijriAndGregorianDate date, int? offset) {
+  return HijriAndGregorianDate.fromGregorianDate(DateTime.utc(date.gregorianDate.year, date.gregorianDate.month, date.gregorianDate.day),offset);
 }
 
 /// Checks if two DateTime objects are the same day.
 /// Returns `false` if either of them is null.
-bool isSameDay(DateTime? a, DateTime? b) {
+bool isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b) {
   if (a == null || b == null) {
     return false;
   }
 
-  return a.year == b.year && a.month == b.month && a.day == b.day;
+  return a.gregorianDate.year == b.gregorianDate.year &&
+      a.gregorianDate.month == b.gregorianDate.month &&
+      a.gregorianDate.day == b.gregorianDate.day &&
+      a.hijriDate.hYear == b.hijriDate.hYear &&
+      a.hijriDate.hMonth == b.hijriDate.hMonth &&
+      a.hijriDate.hDay == b.hijriDate.hDay;
 }

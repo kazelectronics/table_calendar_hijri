@@ -15,6 +15,7 @@ dependencies:
   simple_gesture_detector: ^0.2.0
   hijri:
     path: ../hijri_date/
+  quiver:
 
 dev_dependencies:
   flutter_test:

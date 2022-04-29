@@ -4,6 +4,7 @@
 import 'dart:collection';
 
 import 'package:table_calendar_hijri/table_calendar.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 /// Example event class.
 class Event {
@@ -18,13 +19,13 @@ class Event {
 /// Example events.
 ///
 /// Using a [LinkedHashMap] is highly recommended if you decide to use a map.
-final kEvents = LinkedHashMap<DateTime, List<Event>>(
+final kEvents = LinkedHashMap<HijriAndGregorianDate, List<Event>>(
   equals: isSameDay,
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
 final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
-    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
+    key: (item) => HijriAndGregorianDate.fromGregorianDate(DateTime.utc(kFirstDay.gregorianDate.year, kFirstDay.gregorianDate.month, item * 5),null),
     value: (item) => List.generate(
         item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
   ..addAll({
@@ -34,19 +35,19 @@ final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     ],
   });
 
-int getHashCode(DateTime key) {
-  return key.day * 1000000 + key.month * 10000 + key.year;
+int getHashCode(HijriAndGregorianDate key) {
+  return key.gregorianDate.day * 1000000 + key.gregorianDate.month * 10000 + key.gregorianDate.year;
 }
 
 /// Returns a list of [DateTime] objects from [first] to [last], inclusive.
-List<DateTime> daysInRange(DateTime first, DateTime last) {
-  final dayCount = last.difference(first).inDays + 1;
+List<HijriAndGregorianDate> daysInRange(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+  final dayCount = last.gregorianDate.difference(first.gregorianDate).inDays + 1;
   return List.generate(
     dayCount,
-    (index) => DateTime.utc(first.year, first.month, first.day + index),
-  );
+    (index) => HijriAndGregorianDate.fromGregorianDate(DateTime.utc(first.gregorianDate.year, first.gregorianDate.month, first.gregorianDate.day + index),null
+  ));
 }
 
-final kToday = DateTime.now();
-final kFirstDay = DateTime(kToday.year-1, kToday.month, kToday.day);
-final kLastDay = DateTime(kToday.year+1, kToday.month, kToday.day);
+final kToday = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null);
+final kFirstDay = HijriAndGregorianDate.fromGregorianDate(DateTime(kToday.gregorianDate.year-1, kToday.gregorianDate.month, kToday.gregorianDate.day),null);
+final kLastDay = HijriAndGregorianDate.fromGregorianDate(DateTime(kToday.gregorianDate.year+1, kToday.gregorianDate.month, kToday.gregorianDate.day),null);

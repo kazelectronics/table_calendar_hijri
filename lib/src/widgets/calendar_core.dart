@@ -8,12 +8,12 @@ import 'calendar_page.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 typedef _OnCalendarPageChanged = void Function(
-    int pageIndex, DateTime focusedDay);
+    int pageIndex, HijriAndGregorianDate focusedDay);
 
 class CalendarCore extends StatelessWidget {
-  final DateTime? focusedDay;
-  final DateTime firstDay;
-  final DateTime lastDay;
+  final HijriAndGregorianDate? focusedDay;
+  final HijriAndGregorianDate firstDay;
+  final HijriAndGregorianDate lastDay;
   final CalendarFormat calendarFormat;
   final DayBuilder? dowBuilder;
   final FocusedDayBuilder dayBuilder;
@@ -87,7 +87,7 @@ class CalendarCore extends StatelessWidget {
             );
           },
           dayBuilder: (context, day) {
-            DateTime baseDay;
+            HijriAndGregorianDate baseDay;
             final previousFocusedDay = focusedDay;
             if (previousFocusedDay == null || previousIndex == null) {
               baseDay = _getBaseDay(calendarFormat, index);
@@ -104,7 +104,7 @@ class CalendarCore extends StatelessWidget {
         );
       },
       onPageChanged: (index) {
-        DateTime baseDay;
+        HijriAndGregorianDate baseDay;
         final previousFocusedDay = focusedDay;
         if (previousFocusedDay == null || previousIndex == null) {
           baseDay = _getBaseDay(calendarFormat, index);
@@ -117,7 +117,7 @@ class CalendarCore extends StatelessWidget {
     );
   }
 
-  int _getPageCount(CalendarFormat format, DateTime first, DateTime last) {
+  int _getPageCount(CalendarFormat format, HijriAndGregorianDate first, HijriAndGregorianDate last) {
     switch (format) {
       case CalendarFormat.month:
         return _getMonthCount(first, last) + 1;
@@ -130,80 +130,80 @@ class CalendarCore extends StatelessWidget {
     }
   }
 
-  int _getMonthCount(DateTime first, DateTime last) {
-    final yearDif = last.year - first.year;
-    final monthDif = last.month - first.month;
+  int _getMonthCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+    final yearDif = last.gregorianDate.year - first.gregorianDate.year;
+    final monthDif = last.gregorianDate.month - first.gregorianDate.month;
 
     return yearDif * 12 + monthDif;
   }
 
-  int _getWeekCount(DateTime first, DateTime last) {
-    return last.difference(_firstDayOfWeek(first)).inDays ~/ 7;
+  int _getWeekCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+    return last.gregorianDate.difference(_firstDayOfWeek(first).gregorianDate).inDays ~/ 7;
   }
 
-  int _getTwoWeekCount(DateTime first, DateTime last) {
-    return last.difference(_firstDayOfWeek(first)).inDays ~/ 14;
+  int _getTwoWeekCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+    return last.gregorianDate.difference(_firstDayOfWeek(first).gregorianDate).inDays ~/ 14;
   }
 
-  DateTime _getFocusedDay(
-      CalendarFormat format, DateTime prevFocusedDay, int pageIndex) {
+  HijriAndGregorianDate _getFocusedDay(
+      CalendarFormat format, HijriAndGregorianDate prevFocusedDay, int pageIndex) {
     if (pageIndex == previousIndex) {
       return prevFocusedDay;
     }
 
     final pageDif = pageIndex - previousIndex!;
-    DateTime day;
+    HijriAndGregorianDate day;
 
     switch (format) {
       case CalendarFormat.month:
-        day = DateTime.utc(prevFocusedDay.year, prevFocusedDay.month + pageDif);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month + pageDif),adjustHijriDateByDays);
         break;
       case CalendarFormat.twoWeeks:
-        day = DateTime.utc(prevFocusedDay.year, prevFocusedDay.month,
-            prevFocusedDay.day + pageDif * 14);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month,
+            prevFocusedDay.gregorianDate.day + pageDif * 14),adjustHijriDateByDays);
         break;
       case CalendarFormat.week:
-        day = DateTime.utc(prevFocusedDay.year, prevFocusedDay.month,
-            prevFocusedDay.day + pageDif * 7);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month,
+            prevFocusedDay.gregorianDate.day + pageDif * 7),adjustHijriDateByDays);
         break;
     }
 
-    if (day.isBefore(firstDay)) {
+    if (day.gregorianDate.isBefore(firstDay.gregorianDate)) {
       day = firstDay;
-    } else if (day.isAfter(lastDay)) {
+    } else if (day.gregorianDate.isAfter(lastDay.gregorianDate)) {
       day = lastDay;
     }
 
     return day;
   }
 
-  DateTime _getBaseDay(CalendarFormat format, int pageIndex) {
-    DateTime day;
+  HijriAndGregorianDate _getBaseDay(CalendarFormat format, int pageIndex) {
+    HijriAndGregorianDate day;
 
     switch (format) {
       case CalendarFormat.month:
-        day = DateTime.utc(firstDay.year, firstDay.month + pageIndex);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(firstDay.gregorianDate.year, firstDay.gregorianDate.month + pageIndex),adjustHijriDateByDays);
         break;
       case CalendarFormat.twoWeeks:
-        day = DateTime.utc(
-            firstDay.year, firstDay.month, firstDay.day + pageIndex * 14);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(
+            firstDay.gregorianDate.year, firstDay.gregorianDate.month, firstDay.gregorianDate.day + pageIndex * 14),adjustHijriDateByDays);
         break;
       case CalendarFormat.week:
-        day = DateTime.utc(
-            firstDay.year, firstDay.month, firstDay.day + pageIndex * 7);
+        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(
+            firstDay.gregorianDate.year, firstDay.gregorianDate.month, firstDay.gregorianDate.day + pageIndex * 7),adjustHijriDateByDays);
         break;
     }
 
-    if (day.isBefore(firstDay)) {
+    if (day.gregorianDate.isBefore(firstDay.gregorianDate)) {
       day = firstDay;
-    } else if (day.isAfter(lastDay)) {
+    } else if (day.gregorianDate.isAfter(lastDay.gregorianDate)) {
       day = lastDay;
     }
 
     return day;
   }
 
-  DateTimeRange _getVisibleRange(CalendarFormat format, DateTime focusedDay) {
+  HijriAndGregorianDateRange _getVisibleRange(CalendarFormat format, HijriAndGregorianDate focusedDay) {
     switch (format) {
       case CalendarFormat.month:
         return _daysInMonth(focusedDay);
@@ -216,62 +216,62 @@ class CalendarCore extends StatelessWidget {
     }
   }
 
-  DateTimeRange _daysInWeek(DateTime focusedDay) {
+  HijriAndGregorianDateRange _daysInWeek(HijriAndGregorianDate focusedDay) {
     final daysBefore = _getDaysBefore(focusedDay);
-    final firstToDisplay = focusedDay.subtract(Duration(days: daysBefore));
-    final lastToDisplay = firstToDisplay.add(const Duration(days: 7));
-    return DateTimeRange(start: firstToDisplay, end: lastToDisplay);
+    final firstToDisplay = HijriAndGregorianDate.fromGregorianDate(focusedDay.gregorianDate.subtract(Duration(days: daysBefore)),adjustHijriDateByDays);
+    final lastToDisplay = HijriAndGregorianDate.fromGregorianDate(firstToDisplay.gregorianDate.add(const Duration(days: 7)),adjustHijriDateByDays);
+    return HijriAndGregorianDateRange(start: firstToDisplay, end: lastToDisplay);
   }
 
-  DateTimeRange _daysInTwoWeeks(DateTime focusedDay) {
+  HijriAndGregorianDateRange _daysInTwoWeeks(HijriAndGregorianDate focusedDay) {
     final daysBefore = _getDaysBefore(focusedDay);
-    final firstToDisplay = focusedDay.subtract(Duration(days: daysBefore));
-    final lastToDisplay = firstToDisplay.add(const Duration(days: 14));
-    return DateTimeRange(start: firstToDisplay, end: lastToDisplay);
+    final firstToDisplay = HijriAndGregorianDate.fromGregorianDate(focusedDay.gregorianDate.subtract(Duration(days: daysBefore)),adjustHijriDateByDays);
+    final lastToDisplay = HijriAndGregorianDate.fromGregorianDate(firstToDisplay.gregorianDate.add(const Duration(days: 14)),adjustHijriDateByDays);
+    return HijriAndGregorianDateRange(start: firstToDisplay, end: lastToDisplay);
   }
 
-  DateTimeRange _daysInMonth(DateTime focusedDay) {
+  HijriAndGregorianDateRange _daysInMonth(HijriAndGregorianDate focusedDay) {
     final first = _firstDayOfMonth(focusedDay);
     final daysBefore = _getDaysBefore(first);
-    final firstToDisplay = first.subtract(Duration(days: daysBefore));
+    final firstToDisplay = HijriAndGregorianDate.fromGregorianDate(first.gregorianDate.subtract(Duration(days: daysBefore)),adjustHijriDateByDays);
 
     if (sixWeekMonthsEnforced) {
-      final end = firstToDisplay.add(const Duration(days: 42));
-      return DateTimeRange(start: firstToDisplay, end: end);
+      final end = HijriAndGregorianDate.fromGregorianDate(firstToDisplay.gregorianDate.add(const Duration(days: 42)),adjustHijriDateByDays);
+      return HijriAndGregorianDateRange(start: firstToDisplay, end: end);
     }
 
     final last = _lastDayOfMonth(focusedDay);
     final daysAfter = _getDaysAfter(last);
-    final lastToDisplay = last.add(Duration(days: daysAfter));
+    final lastToDisplay = HijriAndGregorianDate.fromGregorianDate(last.gregorianDate.add(Duration(days: daysAfter)),adjustHijriDateByDays);
 
-    return DateTimeRange(start: firstToDisplay, end: lastToDisplay);
+    return HijriAndGregorianDateRange(start: firstToDisplay, end: lastToDisplay);
   }
 
-  List<DateTime> _daysInRange(DateTime first, DateTime last) {
-    final dayCount = last.difference(first).inDays + 1;
+  List<HijriAndGregorianDate> _daysInRange(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+    final dayCount = last.gregorianDate.difference(first.gregorianDate).inDays + 1;
     return List.generate(
       dayCount,
-      (index) => DateTime.utc(first.year, first.month, first.day + index),
+      (index) => HijriAndGregorianDate.fromGregorianDate(DateTime.utc(first.gregorianDate.year, first.gregorianDate.month, first.gregorianDate.day + index),adjustHijriDateByDays),
     );
   }
 
-  DateTime _firstDayOfWeek(DateTime week) {
+  HijriAndGregorianDate _firstDayOfWeek(HijriAndGregorianDate week) {
     final daysBefore = _getDaysBefore(week);
-    return week.subtract(Duration(days: daysBefore));
+    return HijriAndGregorianDate.fromGregorianDate(week.gregorianDate.subtract(Duration(days: daysBefore)),adjustHijriDateByDays);
   }
 
-  DateTime _firstDayOfMonth(DateTime month) {
-    return DateTime.utc(month.year, month.month, 1);
+  HijriAndGregorianDate _firstDayOfMonth(HijriAndGregorianDate month) {
+    return HijriAndGregorianDate.fromGregorianDate(DateTime.utc(month.gregorianDate.year, month.gregorianDate.month, 1),adjustHijriDateByDays);
   }
 
-  DateTime _lastDayOfMonth(DateTime month) {
-    final date = month.month < 12
-        ? DateTime.utc(month.year, month.month + 1, 1)
-        : DateTime.utc(month.year + 1, 1, 1);
-    return date.subtract(const Duration(days: 1));
+  HijriAndGregorianDate _lastDayOfMonth(HijriAndGregorianDate month) {
+    final date = month.gregorianDate.month < 12
+        ? DateTime.utc(month.gregorianDate.year, month.gregorianDate.month + 1, 1)
+        : DateTime.utc(month.gregorianDate.year + 1, 1, 1);
+    return HijriAndGregorianDate.fromGregorianDate(date.subtract(const Duration(days: 1)),adjustHijriDateByDays);
   }
 
-  int _getRowCount(CalendarFormat format, DateTime focusedDay) {
+  int _getRowCount(CalendarFormat format, HijriAndGregorianDate focusedDay) {
     if (format == CalendarFormat.twoWeeks) {
       return 2;
     } else if (format == CalendarFormat.week) {
@@ -282,23 +282,23 @@ class CalendarCore extends StatelessWidget {
 
     final first = _firstDayOfMonth(focusedDay);
     final daysBefore = _getDaysBefore(first);
-    final firstToDisplay = first.subtract(Duration(days: daysBefore));
+    final firstToDisplay = first.gregorianDate.subtract(Duration(days: daysBefore));
 
     final last = _lastDayOfMonth(focusedDay);
     final daysAfter = _getDaysAfter(last);
-    final lastToDisplay = last.add(Duration(days: daysAfter));
+    final lastToDisplay = last.gregorianDate.add(Duration(days: daysAfter));
 
     return (lastToDisplay.difference(firstToDisplay).inDays + 1) ~/ 7;
   }
 
-  int _getDaysBefore(DateTime firstDay) {
-    return (firstDay.weekday + 7 - getWeekdayNumber(startingDayOfWeek)) % 7;
+  int _getDaysBefore(HijriAndGregorianDate firstDay) {
+    return (firstDay.gregorianDate.weekday + 7 - getWeekdayNumber(startingDayOfWeek)) % 7;
   }
 
-  int _getDaysAfter(DateTime lastDay) {
+  int _getDaysAfter(HijriAndGregorianDate lastDay) {
     int invertedStartingWeekday = 8 - getWeekdayNumber(startingDayOfWeek);
 
-    int daysAfter = 7 - ((lastDay.weekday + invertedStartingWeekday) % 7);
+    int daysAfter = 7 - ((lastDay.gregorianDate.weekday + invertedStartingWeekday) % 7);
     if (daysAfter == 7) {
       daysAfter = 0;
     }

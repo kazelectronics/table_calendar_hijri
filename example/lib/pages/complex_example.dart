@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 class TableComplexExample extends StatefulWidget {
   @override
@@ -17,15 +18,15 @@ class TableComplexExample extends StatefulWidget {
 class _TableComplexExampleState extends State<TableComplexExample> {
   late final PageController _pageController;
   late final ValueNotifier<List<Event>> _selectedEvents;
-  final ValueNotifier<DateTime> _focusedDay = ValueNotifier(DateTime.now());
-  final Set<DateTime> _selectedDays = LinkedHashSet<DateTime>(
+  final ValueNotifier<HijriAndGregorianDate> _focusedDay = ValueNotifier(HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null));
+  final Set<HijriAndGregorianDate> _selectedDays = LinkedHashSet<HijriAndGregorianDate>(
     equals: isSameDay,
     hashCode: getHashCode,
   );
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  HijriAndGregorianDate? _rangeStart;
+  HijriAndGregorianDate? _rangeEnd;
 
   @override
   void initState() {
@@ -45,22 +46,22 @@ class _TableComplexExampleState extends State<TableComplexExample> {
   bool get canClearSelection =>
       _selectedDays.isNotEmpty || _rangeStart != null || _rangeEnd != null;
 
-  List<Event> _getEventsForDay(DateTime day) {
+  List<Event> _getEventsForDay(HijriAndGregorianDate day) {
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForDays(Iterable<DateTime> days) {
+  List<Event> _getEventsForDays(Iterable<HijriAndGregorianDate> days) {
     return [
       for (final d in days) ..._getEventsForDay(d),
     ];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  List<Event> _getEventsForRange(HijriAndGregorianDate start, HijriAndGregorianDate end) {
     final days = daysInRange(start, end);
     return _getEventsForDays(days);
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  void _onDaySelected(HijriAndGregorianDate selectedDay, HijriAndGregorianDate focusedDay) {
     setState(() {
       if (_selectedDays.contains(selectedDay)) {
         _selectedDays.remove(selectedDay);
@@ -77,7 +78,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
     _selectedEvents.value = _getEventsForDays(_selectedDays);
   }
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+  void _onRangeSelected(HijriAndGregorianDate? start, HijriAndGregorianDate? end, HijriAndGregorianDate focusedDay) {
     setState(() {
       _focusedDay.value = focusedDay;
       _rangeStart = start;
@@ -103,14 +104,14 @@ class _TableComplexExampleState extends State<TableComplexExample> {
       ),
       body: Column(
         children: [
-          ValueListenableBuilder<DateTime>(
+          ValueListenableBuilder<HijriAndGregorianDate>(
             valueListenable: _focusedDay,
             builder: (context, value, _) {
               return _CalendarHeader(
                 focusedDay: value,
                 clearButtonVisible: canClearSelection,
                 onTodayButtonTap: () {
-                  setState(() => _focusedDay.value = DateTime.now());
+                  setState(() => _focusedDay.value = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null));
                 },
                 onClearButtonTap: () {
                   setState(() {
@@ -148,7 +149,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
             eventLoader: _getEventsForDay,
             holidayPredicate: (day) {
               // Every 20th day of the month will be treated as a holiday
-              return day.day == 20;
+              return day.gregorianDate.day == 20;
             },
             onDaySelected: _onDaySelected,
             onRangeSelected: _onRangeSelected,
@@ -194,7 +195,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
 }
 
 class _CalendarHeader extends StatelessWidget {
-  final DateTime focusedDay;
+  final HijriAndGregorianDate focusedDay;
   final VoidCallback onLeftArrowTap;
   final VoidCallback onRightArrowTap;
   final VoidCallback onTodayButtonTap;
@@ -213,7 +214,7 @@ class _CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headerText = DateFormat.yMMM().format(focusedDay);
+    final headerText = DateFormat.yMMM().format(focusedDay.gregorianDate);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

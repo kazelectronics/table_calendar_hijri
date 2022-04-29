@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 class CalendarPage extends StatelessWidget {
-  final Widget Function(BuildContext context, DateTime day)? dowBuilder;
-  final Widget Function(BuildContext context, DateTime day) dayBuilder;
-  final List<DateTime> visibleDays;
+  final Widget Function(BuildContext context, HijriAndGregorianDate day)? dowBuilder;
+  final Widget Function(BuildContext context, HijriAndGregorianDate day) dayBuilder;
+  final List<HijriAndGregorianDate> visibleDays;
   final Decoration? dowDecoration;
   final Decoration? rowDecoration;
   final TableBorder? tableBorder;

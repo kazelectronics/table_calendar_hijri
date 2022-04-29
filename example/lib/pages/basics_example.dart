@@ -4,6 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 import '../utils.dart';
+import 'package:hijri/hijri_calendar.dart';
+
+final int adjustDays = 0;
 
 class TableBasicsExample extends StatefulWidget {
   @override
@@ -11,9 +14,10 @@ class TableBasicsExample extends StatefulWidget {
 }
 
 class _TableBasicsExampleState extends State<TableBasicsExample> {
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  HijriAndGregorianDate _focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),adjustDays);
+  HijriAndGregorianDate? _selectedDay;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,8 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         headerStyle: HeaderStyle(formatButtonVisible: false),
         showHijriDate: true,
         showGregorianDate: true,
-        adjustHijriDateByDays: 0,
+        adjustHijriDateByDays: adjustDays,
+        hijriHasPreference: true,
       ),
     );
   }

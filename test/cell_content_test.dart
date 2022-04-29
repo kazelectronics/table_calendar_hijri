@@ -3,11 +3,12 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_calendar/src/widgets/cell_content.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:table_calendar_hijri/src/widgets/cell_content.dart';
+import 'package:table_calendar_hijri/table_calendar.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 Widget setupTestWidget(
-  DateTime cellDay, {
+  HijriAndGregorianDate cellDay, {
   CalendarBuilders calendarBuilders = const CalendarBuilders(),
   bool isDisabled = false,
   bool isToday = false,
@@ -46,16 +47,16 @@ Widget setupTestWidget(
 void main() {
   group('CalendarBuilders flag test:', () {
     testWidgets('selectedBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         selectedBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -70,16 +71,16 @@ void main() {
     });
 
     testWidgets('rangeStartBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         rangeStartBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -94,16 +95,16 @@ void main() {
     });
 
     testWidgets('rangeEndBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         rangeEndBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -118,16 +119,16 @@ void main() {
     });
 
     testWidgets('withinRangeBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         withinRangeBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -142,16 +143,16 @@ void main() {
     });
 
     testWidgets('todayBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         todayBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -166,16 +167,16 @@ void main() {
     });
 
     testWidgets('holidayBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         holidayBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -190,16 +191,16 @@ void main() {
     });
 
     testWidgets('outsideBuilder', (tester) async {
-      DateTime? builderDay;
+      HijriAndGregorianDate? builderDay;
 
       final calendarBuilders = CalendarBuilders(
         outsideBuilder: (context, day, focusedDay) {
           builderDay = day;
-          return Text('${day.day}');
+          return Text('${day.gregorianDate.day}');
         },
       );
 
-      final cellDay = DateTime.utc(2021, 7, 15);
+      final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
       expect(builderDay, isNull);
 
       await tester.pumpWidget(
@@ -216,16 +217,16 @@ void main() {
     testWidgets(
       'defaultBuilder gets triggered when no other flags are active',
       (tester) async {
-        DateTime? builderDay;
+        HijriAndGregorianDate? builderDay;
 
         final calendarBuilders = CalendarBuilders(
           defaultBuilder: (context, day, focusedDay) {
             builderDay = day;
-            return Text('${day.day}');
+            return Text('${day.gregorianDate.day}');
           },
         );
 
-        final cellDay = DateTime.utc(2021, 7, 15);
+        final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
         expect(builderDay, isNull);
 
         await tester.pumpWidget(
@@ -242,23 +243,23 @@ void main() {
     testWidgets(
       'disabledBuilder has higher build order priority than selectedBuilder',
       (tester) async {
-        DateTime? builderDay;
+        HijriAndGregorianDate? builderDay;
         String builderName = '';
 
         final calendarBuilders = CalendarBuilders(
           selectedBuilder: (context, day, focusedDay) {
             builderName = 'selectedBuilder';
             builderDay = day;
-            return Text('${day.day}');
+            return Text('${day.gregorianDate.day}');
           },
           disabledBuilder: (context, day, focusedDay) {
             builderName = 'disabledBuilder';
             builderDay = day;
-            return Text('${day.day}');
+            return Text('${day.gregorianDate.day}');
           },
         );
 
-        final cellDay = DateTime.utc(2021, 7, 15);
+        final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
         expect(builderDay, isNull);
 
         await tester.pumpWidget(
@@ -278,23 +279,23 @@ void main() {
     testWidgets(
       'prioritizedBuilder has the highest build order priority',
       (tester) async {
-        DateTime? builderDay;
+        HijriAndGregorianDate? builderDay;
         String builderName = '';
 
         final calendarBuilders = CalendarBuilders(
           prioritizedBuilder: (context, day, focusedDay) {
             builderName = 'prioritizedBuilder';
             builderDay = day;
-            return Text('${day.day}');
+            return Text('${day.gregorianDate.day}');
           },
           disabledBuilder: (context, day, focusedDay) {
             builderName = 'disabledBuilder';
             builderDay = day;
-            return Text('${day.day}');
+            return Text('${day.gregorianDate.day}');
           },
         );
 
-        final cellDay = DateTime.utc(2021, 7, 15);
+        final cellDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
         expect(builderDay, isNull);
 
         await tester.pumpWidget(

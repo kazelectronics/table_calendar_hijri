@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 class TableRangeExample extends StatefulWidget {
   @override
@@ -15,10 +16,10 @@ class _TableRangeExampleState extends State<TableRangeExample> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOn; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  HijriAndGregorianDate _focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.now(), null);
+  HijriAndGregorianDate? _selectedDay;
+  HijriAndGregorianDate? _rangeStart;
+  HijriAndGregorianDate? _rangeEnd;
 
   @override
   Widget build(BuildContext context) {

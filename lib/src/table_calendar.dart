@@ -19,12 +19,12 @@ import 'package:hijri/hijri_calendar.dart';
 
 /// Signature for `onDaySelected` callback. Contains the selected day and focused day.
 typedef OnDaySelected = void Function(
-    DateTime selectedDay, DateTime focusedDay);
+    HijriAndGregorianDate selectedDay, HijriAndGregorianDate focusedDay);
 
 /// Signature for `onRangeSelected` callback.
 /// Contains start and end of the selected range, as well as currently focused day.
 typedef OnRangeSelected = void Function(
-    DateTime? start, DateTime? end, DateTime focusedDay);
+    HijriAndGregorianDate? start, HijriAndGregorianDate? end, HijriAndGregorianDate focusedDay);
 
 /// Modes that range selection can operate in.
 enum RangeSelectionMode { disabled, toggledOff, toggledOn, enforced }
@@ -37,33 +37,33 @@ class TableCalendar<T> extends StatefulWidget {
   final dynamic locale;
 
   /// The start of the selected day range.
-  final DateTime? rangeStartDay;
+  final HijriAndGregorianDate? rangeStartDay;
 
   /// The end of the selected day range.
-  final DateTime? rangeEndDay;
+  final HijriAndGregorianDate? rangeEndDay;
 
-  /// DateTime that determines which days are currently visible and focused.
-  final DateTime focusedDay;
+  /// HijriAndGregorianDate that determines which days are currently visible and focused.
+  final HijriAndGregorianDate focusedDay;
 
   /// The first active day of `TableCalendar`.
   /// Blocks swiping to days before it.
   ///
   /// Days before it will use `disabledStyle` and trigger `onDisabledDayTapped` callback.
-  final DateTime firstDay;
+  final HijriAndGregorianDate firstDay;
 
   /// The last active day of `TableCalendar`.
   /// Blocks swiping to days after it.
   ///
   /// Days after it will use `disabledStyle` and trigger `onDisabledDayTapped` callback.
-  final DateTime lastDay;
+  final HijriAndGregorianDate lastDay;
 
-  /// DateTime that will be treated as today. Defaults to `DateTime.now()`.
+  /// HijriAndGregorianDate that will be treated as today. Defaults to `HijriAndGregorianDate.now()`.
   ///
   /// Overriding this property might be useful for testing.
-  final DateTime? currentDay;
+  final HijriAndGregorianDate? currentDay;
 
   /// List of days treated as weekend days.
-  /// Use built-in `DateTime` weekday constants (e.g. `DateTime.monday`) instead of `int` literals (e.g. `1`).
+  /// Use built-in `HijriAndGregorianDate` weekday constants (e.g. `HijriAndGregorianDate.monday`) instead of `int` literals (e.g. `1`).
   final List<int> weekendDays;
 
   /// Specifies `TableCalendar`'s current format.
@@ -160,17 +160,17 @@ class TableCalendar<T> extends StatefulWidget {
   final RangeSelectionMode rangeSelectionMode;
 
   /// Function that assigns a list of events to a specified day.
-  final List<T> Function(DateTime day)? eventLoader;
+  final List<T> Function(HijriAndGregorianDate day)? eventLoader;
 
   /// Function deciding whether given day should be enabled or not.
   /// If `false` is returned, this day will be disabled.
-  final bool Function(DateTime day)? enabledDayPredicate;
+  final bool Function(HijriAndGregorianDate day)? enabledDayPredicate;
 
   /// Function deciding whether given day should be marked as selected.
-  final bool Function(DateTime day)? selectedDayPredicate;
+  final bool Function(HijriAndGregorianDate day)? selectedDayPredicate;
 
   /// Function deciding whether given day is treated as a holiday.
-  final bool Function(DateTime day)? holidayPredicate;
+  final bool Function(HijriAndGregorianDate day)? holidayPredicate;
 
   /// Called whenever a day range gets selected.
   final OnRangeSelected? onRangeSelected;
@@ -182,19 +182,19 @@ class TableCalendar<T> extends StatefulWidget {
   final OnDaySelected? onDayLongPressed;
 
   /// Called whenever any disabled day gets tapped.
-  final void Function(DateTime day)? onDisabledDayTapped;
+  final void Function(HijriAndGregorianDate day)? onDisabledDayTapped;
 
   /// Called whenever any disabled day gets long pressed.
-  final void Function(DateTime day)? onDisabledDayLongPressed;
+  final void Function(HijriAndGregorianDate day)? onDisabledDayLongPressed;
 
   /// Called whenever header gets tapped.
-  final void Function(DateTime focusedDay)? onHeaderTapped;
+  final void Function(HijriAndGregorianDate focusedDay)? onHeaderTapped;
 
   /// Called whenever header gets long pressed.
-  final void Function(DateTime focusedDay)? onHeaderLongPressed;
+  final void Function(HijriAndGregorianDate focusedDay)? onHeaderLongPressed;
 
   /// Called whenever currently visible calendar page is changed.
-  final void Function(DateTime focusedDay)? onPageChanged;
+  final void Function(HijriAndGregorianDate focusedDay)? onPageChanged;
 
   /// Called whenever `calendarFormat` is changed.
   final void Function(CalendarFormat format)? onFormatChanged;
@@ -208,16 +208,18 @@ class TableCalendar<T> extends StatefulWidget {
   /// Show Gregorian Dates - cannot be false when showHijriDate is false
   final bool showGregorianDate;
 
+  final bool hijriHasPreference;
+
   /// adjust Hijri calendar to match exact day
   final int adjustHijriDateByDays;
 
   /// Creates a `TableCalendar` widget.
   TableCalendar({
     Key? key,
-    required DateTime focusedDay,
-    required DateTime firstDay,
-    required DateTime lastDay,
-    DateTime? currentDay,
+    required HijriAndGregorianDate focusedDay,
+    required HijriAndGregorianDate firstDay,
+    required HijriAndGregorianDate lastDay,
+    HijriAndGregorianDate? currentDay,
     this.locale,
     this.rangeStartDay,
     this.rangeEndDay,
@@ -269,16 +271,17 @@ class TableCalendar<T> extends StatefulWidget {
     this.showHijriDate = false,
     this.showGregorianDate = true,
     this.adjustHijriDateByDays = 0,
+    this.hijriHasPreference = false,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
         assert(weekendDays.isNotEmpty
             ? weekendDays.every(
                 (day) => day >= DateTime.monday && day <= DateTime.sunday)
             : true),
-        focusedDay = normalizeDate(focusedDay),
-        firstDay = normalizeDate(firstDay),
-        lastDay = normalizeDate(lastDay),
-        currentDay = currentDay ?? DateTime.now(),
+        focusedDay = normalizeDate(focusedDay,adjustHijriDateByDays),
+        firstDay = normalizeDate(firstDay,adjustHijriDateByDays),
+        lastDay = normalizeDate(lastDay,adjustHijriDateByDays),
+        currentDay = currentDay ?? HijriAndGregorianDate.fromGregorianDate(DateTime.now(), adjustHijriDateByDays),
         super(key: key);
 
   @override
@@ -287,9 +290,9 @@ class TableCalendar<T> extends StatefulWidget {
 
 class _TableCalendarState<T> extends State<TableCalendar<T>> {
   late final PageController _pageController;
-  late final ValueNotifier<DateTime> _focusedDay;
+  late final ValueNotifier<HijriAndGregorianDate> _focusedDay;
   late RangeSelectionMode _rangeSelectionMode;
-  DateTime? _firstSelectedDay;
+  HijriAndGregorianDate? _firstSelectedDay;
 
   @override
   void initState() {
@@ -352,8 +355,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     }
   }
 
-  void _onDayTapped(DateTime day) {
-    final isOutside = day.month != _focusedDay.value.month;
+  void _onDayTapped(HijriAndGregorianDate day) {
+    final isOutside = day.gregorianDate.month != _focusedDay.value.gregorianDate.month;
     if (isOutside && _shouldBlockOutsideDays) {
       return;
     }
@@ -369,10 +372,10 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         _firstSelectedDay = day;
         widget.onRangeSelected!(_firstSelectedDay, null, _focusedDay.value);
       } else {
-        if (day.isAfter(_firstSelectedDay!)) {
+        if (day.gregorianDate.isAfter(_firstSelectedDay!.gregorianDate)) {
           widget.onRangeSelected!(_firstSelectedDay, day, _focusedDay.value);
           _firstSelectedDay = null;
-        } else if (day.isBefore(_firstSelectedDay!)) {
+        } else if (day.gregorianDate.isBefore(_firstSelectedDay!.gregorianDate)) {
           widget.onRangeSelected!(day, _firstSelectedDay, _focusedDay.value);
           _firstSelectedDay = null;
         }
@@ -382,8 +385,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     }
   }
 
-  void _onDayLongPressed(DateTime day) {
-    final isOutside = day.month != _focusedDay.value.month;
+  void _onDayLongPressed(HijriAndGregorianDate day) {
+    final isOutside = day.gregorianDate.month != _focusedDay.value.gregorianDate.month;
     if (isOutside && _shouldBlockOutsideDays) {
       return;
     }
@@ -413,7 +416,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     }
   }
 
-  void _updateFocusOnTap(DateTime day) {
+  void _updateFocusOnTap(HijriAndGregorianDate day) {
     if (widget.pageJumpingEnabled) {
       _focusedDay.value = day;
       return;
@@ -459,7 +462,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     return Column(
       children: [
         if (widget.headerVisible)
-          ValueListenableBuilder<DateTime>(
+          ValueListenableBuilder<HijriAndGregorianDate>(
             valueListenable: _focusedDay,
             builder: (context, value, _) {
               return CalendarHeader(
@@ -485,6 +488,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
                 showHijriDate: widget.showHijriDate,
                 showGregorianDate: widget.showGregorianDate,
                 adjustHijriDateByDays: widget.adjustHijriDateByDays,
+                hijriHasPreference: widget.hijriHasPreference,
               );
             },
           ),
@@ -521,14 +525,14 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
               _focusedDay.value = focusedDay;
               widget.onPageChanged?.call(focusedDay);
             },
-            dowBuilder: (BuildContext context, DateTime day) {
+            dowBuilder: (BuildContext context, HijriAndGregorianDate day) {
               Widget? dowCell =
                   widget.calendarBuilders.dowBuilder?.call(context, day);
 
               if (dowCell == null) {
                 final weekdayString = widget.daysOfWeekStyle.dowTextFormatter
                         ?.call(day, widget.locale) ??
-                    DateFormat.E(widget.locale).format(day);
+                    DateFormat.E(widget.locale).format(day.gregorianDate);
 
                 final isWeekend =
                     _isWeekend(day, weekendDays: widget.weekendDays);
@@ -561,8 +565,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     );
   }
 
-  Widget _buildCell(DateTime day, DateTime focusedDay) {
-    final isOutside = day.month != focusedDay.month;
+  Widget _buildCell(HijriAndGregorianDate day, HijriAndGregorianDate focusedDay) {
+    final isOutside = day.gregorianDate.month != focusedDay.gregorianDate.month;
 
     if (isOutside && _shouldBlockOutsideDays) {
       return Container();
@@ -612,7 +616,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         final isWeekend = _isWeekend(day, weekendDays: widget.weekendDays);
 
         Widget content = CellContent(
-          key: ValueKey('CellContent-${day.year}-${day.month}-${day.day}'),
+          key: ValueKey('CellContent-${day.gregorianDate.year}-${day.gregorianDate.month}-${day.gregorianDate.day}'),
           day: day,
           focusedDay: focusedDay,
           calendarStyle: widget.calendarStyle,
@@ -631,6 +635,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
           showHijriDate: widget.showHijriDate,
           showGregorianDate: widget.showGregorianDate,
           adjustHijriDateByDays: widget.adjustHijriDateByDays,
+          hijriHasPreference: widget.hijriHasPreference,
         );
 
         children.add(content);
@@ -690,7 +695,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
     );
   }
 
-  Widget _buildSingleMarker(DateTime day, T event, double markerSize) {
+  Widget _buildSingleMarker(HijriAndGregorianDate day, T event, double markerSize) {
     return widget.calendarBuilders.singleMarkerBuilder
             ?.call(context, day, event) ??
         Container(
@@ -701,61 +706,61 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         );
   }
 
-  bool _isWithinRange(DateTime day, DateTime start, DateTime end) {
+  bool _isWithinRange(HijriAndGregorianDate day, HijriAndGregorianDate start, HijriAndGregorianDate end) {
     if (isSameDay(day, start) || isSameDay(day, end)) {
       return true;
     }
 
-    if (day.isAfter(start) && day.isBefore(end)) {
+    if (day.gregorianDate.isAfter(start.gregorianDate) && day.gregorianDate.isBefore(end.gregorianDate)) {
       return true;
     }
 
     return false;
   }
 
-  bool _isDayDisabled(DateTime day) {
-    return day.isBefore(widget.firstDay) ||
-        day.isAfter(widget.lastDay) ||
+  bool _isDayDisabled(HijriAndGregorianDate day) {
+    return day.gregorianDate.isBefore(widget.firstDay.gregorianDate) ||
+        day.gregorianDate.isAfter(widget.lastDay.gregorianDate) ||
         !_isDayAvailable(day);
   }
 
-  bool _isDayAvailable(DateTime day) {
+  bool _isDayAvailable(HijriAndGregorianDate day) {
     return widget.enabledDayPredicate == null
         ? true
         : widget.enabledDayPredicate!(day);
   }
 
-  DateTime _firstDayOfMonth(DateTime month) {
-    return DateTime.utc(month.year, month.month, 1);
+  HijriAndGregorianDate _firstDayOfMonth(HijriAndGregorianDate month) {
+    return HijriAndGregorianDate.fromGregorianDate(DateTime.utc(month.gregorianDate.year, month.gregorianDate.month, 1),widget.adjustHijriDateByDays);
   }
 
-  DateTime _lastDayOfMonth(DateTime month) {
-    final date = month.month < 12
-        ? DateTime.utc(month.year, month.month + 1, 1)
-        : DateTime.utc(month.year + 1, 1, 1);
-    return date.subtract(const Duration(days: 1));
+  HijriAndGregorianDate _lastDayOfMonth(HijriAndGregorianDate month) {
+    final date = month.gregorianDate.month < 12
+        ? DateTime.utc(month.gregorianDate.year, month.gregorianDate.month + 1, 1)
+        : DateTime.utc(month.gregorianDate.year + 1, 1, 1);
+    return HijriAndGregorianDate.fromGregorianDate(date.subtract(const Duration(days: 1)),widget.adjustHijriDateByDays);
   }
 
-  bool _isBeforeMonth(DateTime day, DateTime month) {
-    if (day.year == month.year) {
-      return day.month < month.month;
+  bool _isBeforeMonth(HijriAndGregorianDate day, HijriAndGregorianDate month) {
+    if (day.gregorianDate.year == month.gregorianDate.year) {
+      return day.gregorianDate.month < month.gregorianDate.month;
     } else {
-      return day.isBefore(month);
+      return day.gregorianDate.isBefore(month.gregorianDate);
     }
   }
 
-  bool _isAfterMonth(DateTime day, DateTime month) {
-    if (day.year == month.year) {
-      return day.month > month.month;
+  bool _isAfterMonth(HijriAndGregorianDate day, HijriAndGregorianDate month) {
+    if (day.gregorianDate.year == month.gregorianDate.year) {
+      return day.gregorianDate.month > month.gregorianDate.month;
     } else {
-      return day.isAfter(month);
+      return day.gregorianDate.isAfter(month.gregorianDate);
     }
   }
 
   bool _isWeekend(
-    DateTime day, {
+    HijriAndGregorianDate day, {
     List<int> weekendDays = const [DateTime.saturday, DateTime.sunday],
   }) {
-    return weekendDays.contains(day.weekday);
+    return weekendDays.contains(day.gregorianDate.weekday);
   }
 }

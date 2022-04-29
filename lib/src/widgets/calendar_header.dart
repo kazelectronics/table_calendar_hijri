@@ -14,7 +14,7 @@ import 'package:hijri/hijri_calendar.dart';
 
 class CalendarHeader extends StatelessWidget {
   final dynamic locale;
-  final DateTime focusedMonth;
+  final HijriAndGregorianDate focusedMonth;
   final CalendarFormat calendarFormat;
   final HeaderStyle headerStyle;
   final VoidCallback onLeftChevronTap;
@@ -24,9 +24,10 @@ class CalendarHeader extends StatelessWidget {
   final ValueChanged<CalendarFormat> onFormatButtonTap;
   final Map<CalendarFormat, String> availableCalendarFormats;
   final DayBuilder? headerTitleBuilder;
-  final bool? showHijriDate;
-  final bool? showGregorianDate;
-  final int? adjustHijriDateByDays;
+  final bool showHijriDate;
+  final bool showGregorianDate;
+  final int adjustHijriDateByDays;
+  final bool hijriHasPreference;
 
   const CalendarHeader({
     Key? key,
@@ -41,16 +42,17 @@ class CalendarHeader extends StatelessWidget {
     required this.onFormatButtonTap,
     required this.availableCalendarFormats,
     this.headerTitleBuilder,
-    this.showHijriDate,
-    this.showGregorianDate,
-    this.adjustHijriDateByDays,
+    required this.showHijriDate,
+    required this.showGregorianDate,
+    required this.adjustHijriDateByDays,
+    required this.hijriHasPreference,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriDate.fromDate(focusedMonth,adjustHijriDateByDays).toFormat("MMMM yyyy");
-    final text = (showGregorianDate==null||showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
-        DateFormat.yMMMM(locale).format(focusedMonth);
+    final hijriText = (showHijriDate==false)?'':focusedMonth.hijriDate.toFormat("MMMM yyyy");
+    final text = (showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
+        DateFormat.yMMMM(locale).format(focusedMonth.gregorianDate);
 
     return Container(
       decoration: headerStyle.decoration,
@@ -87,14 +89,14 @@ class CalendarHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        hijriText,
+                        hijriHasPreference?hijriText:text,
                         style: headerStyle.titleTextStyle,
                         textAlign: headerStyle.titleCentered
                             ? TextAlign.center
                             : TextAlign.start,
                       ),
                       Text(
-                        "( "+text+" )",
+                        hijriHasPreference?"( "+text+" )":"( "+hijriText+" )",
                         style: headerStyle.dualTitleTextStyle,
                         textAlign: headerStyle.titleCentered
                             ? TextAlign.center

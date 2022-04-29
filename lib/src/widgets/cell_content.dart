@@ -11,8 +11,8 @@ import '../customization/calendar_style.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 class CellContent extends StatelessWidget {
-  final DateTime day;
-  final DateTime focusedDay;
+  final HijriAndGregorianDate day;
+  final HijriAndGregorianDate focusedDay;
   final dynamic locale;
   final bool isTodayHighlighted;
   final bool isToday;
@@ -26,9 +26,10 @@ class CellContent extends StatelessWidget {
   final bool isWeekend;
   final CalendarStyle calendarStyle;
   final CalendarBuilders calendarBuilders;
-  final bool? showHijriDate;
-  final bool? showGregorianDate;
-  final int? adjustHijriDateByDays;
+  final bool showHijriDate;
+  final bool showGregorianDate;
+  final int adjustHijriDateByDays;
+  final bool hijriHasPreference;
 
   const CellContent({
     Key? key,
@@ -47,15 +48,16 @@ class CellContent extends StatelessWidget {
     required this.isHoliday,
     required this.isWeekend,
     this.locale,
-    this.showHijriDate,
-    this.showGregorianDate,
-    this.adjustHijriDateByDays,
+    required this.showHijriDate,
+    required this.showGregorianDate,
+    required this.adjustHijriDateByDays,
+    required this.hijriHasPreference,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final dowLabel = DateFormat.EEEE(locale).format(day);
-    final dayLabel = DateFormat.yMMMMd(locale).format(day);
+    final dowLabel = DateFormat.EEEE(locale).format(day.gregorianDate);
+    final dayLabel = DateFormat.yMMMMd(locale).format(day.gregorianDate);
     final semanticsLabel = '$dowLabel, $dayLabel';
 
     Widget? cell =
@@ -69,8 +71,8 @@ class CellContent extends StatelessWidget {
       );
     }
 
-    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriDate.fromDate(day,adjustHijriDateByDays).toFormat("dd");
-    final text = (showGregorianDate==null||showGregorianDate==false)?hijriText.isEmpty?'${day.day}':'':hijriText.isEmpty?'${day.day}':"(" + '${day.day}' + ")";
+    final hijriText = (showHijriDate==false)?'':hijriHasPreference?day.hijriDate.toFormat("dd"):"(" + day.hijriDate.toFormat("dd") + ")";
+    final text = (showGregorianDate==false)&&(hijriText.isNotEmpty)?'':hijriHasPreference&&(hijriText.isNotEmpty)?"("+'${day.gregorianDate.day}'+")":'${day.gregorianDate.day}';
 
     final margin = calendarStyle.cellMargin;
     final padding = calendarStyle.cellPadding;
@@ -89,8 +91,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.disabledTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.disabledTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.disabledTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.disabledTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.disabledDualTextStyle, ),
               ],
             ),
           );
@@ -106,8 +108,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.selectedTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.selectedTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.selectedTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.selectedTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.selectedDualTextStyle, ),
               ],
             ),
           );
@@ -124,8 +126,8 @@ class CellContent extends StatelessWidget {
                   (hijriText, style: calendarStyle.rangeStartTextStyle):Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(hijriText, style: calendarStyle.rangeStartTextStyle.copyWith(fontSize: 18),),
-                    Text(text, style: calendarStyle.rangeStartTextStyle.copyWith(fontSize: 10), ),
+                    Text(hijriHasPreference?hijriText:text, style: calendarStyle.rangeStartTextStyle,),
+                    Text(hijriHasPreference?text:hijriText, style: calendarStyle.rangeStartDualTextStyle, ),
                   ],
                 ),
               );
@@ -141,8 +143,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.rangeEndTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.rangeEndTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.rangeEndTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.rangeEndTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.rangeEndDualTextStyle, ),
               ],
             ),
           );
@@ -158,8 +160,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.todayTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.todayTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.todayTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.todayTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.todayDualTextStyle, ),
               ],
             ),
           );
@@ -175,8 +177,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.holidayTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.holidayTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.holidayTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.holidayTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.holidayDualTextStyle, ),
               ],
             ),
           );
@@ -193,8 +195,8 @@ class CellContent extends StatelessWidget {
                   (hijriText, style: calendarStyle.withinRangeTextStyle):Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(hijriText, style: calendarStyle.withinRangeTextStyle.copyWith(fontSize: 18),),
-                    Text(text, style: calendarStyle.withinRangeTextStyle.copyWith(fontSize: 10), ),
+                    Text(hijriHasPreference?hijriText:text, style: calendarStyle.withinRangeTextStyle,),
+                    Text(hijriHasPreference?text:hijriText, style: calendarStyle.withinRangeDualTextStyle, ),
                   ],
                 ),
               );
@@ -210,8 +212,8 @@ class CellContent extends StatelessWidget {
               (hijriText, style: calendarStyle.outsideTextStyle):Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(hijriText, style: calendarStyle.outsideTextStyle.copyWith(fontSize: 18),),
-                Text(text, style: calendarStyle.outsideTextStyle.copyWith(fontSize: 10), ),
+                Text(hijriHasPreference?hijriText:text, style: calendarStyle.outsideTextStyle,),
+                Text(hijriHasPreference?text:hijriText, style: calendarStyle.outsideDualTextStyle, ),
               ],
             ),
           );
@@ -239,16 +241,16 @@ class CellContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  hijriText,
+                  hijriHasPreference?hijriText:text,
                   style: isWeekend
-                      ? calendarStyle.weekendTextStyle.copyWith(fontSize: 18)
-                      : calendarStyle.defaultTextStyle.copyWith(fontSize: 18),
+                      ? calendarStyle.weekendTextStyle
+                      : calendarStyle.defaultTextStyle,
                 ),
                 Text(
-                  text,
+                  hijriHasPreference?text:hijriText,
                   style: isWeekend
-                      ? calendarStyle.weekendTextStyle.copyWith(fontSize: 10)
-                      : calendarStyle.defaultTextStyle.copyWith(fontSize: 10),
+                      ? calendarStyle.weekendDualTextStyle
+                      : calendarStyle.weekendDualTextStyle,
                 ),
               ],
             ),

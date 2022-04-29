@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 class TableEventsExample extends StatefulWidget {
   @override
@@ -16,10 +17,10 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  HijriAndGregorianDate _focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null);
+  HijriAndGregorianDate? _selectedDay;
+  HijriAndGregorianDate? _rangeStart;
+  HijriAndGregorianDate? _rangeEnd;
 
   @override
   void initState() {
@@ -35,12 +36,12 @@ class _TableEventsExampleState extends State<TableEventsExample> {
     super.dispose();
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
+  List<Event> _getEventsForDay(HijriAndGregorianDate day) {
     // Implementation example
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  List<Event> _getEventsForRange(HijriAndGregorianDate start, HijriAndGregorianDate end) {
     // Implementation example
     final days = daysInRange(start, end);
 
@@ -49,7 +50,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
     ];
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  void _onDaySelected(HijriAndGregorianDate selectedDay, HijriAndGregorianDate focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
@@ -63,7 +64,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
     }
   }
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+  void _onRangeSelected(HijriAndGregorianDate? start, HijriAndGregorianDate? end, HijriAndGregorianDate focusedDay) {
     setState(() {
       _selectedDay = null;
       _focusedDay = focusedDay;

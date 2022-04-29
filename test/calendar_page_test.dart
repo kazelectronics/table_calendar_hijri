@@ -4,7 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_calendar/src/widgets/calendar_page.dart';
+import 'package:table_calendar_hijri/src/widgets/calendar_page.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 Widget setupTestWidget(Widget child) {
   return Directionality(
@@ -13,16 +14,16 @@ Widget setupTestWidget(Widget child) {
   );
 }
 
-List<DateTime> visibleDays = getDaysInRange(
-  DateTime.utc(2021, 6, 27),
-  DateTime.utc(2021, 7, 31),
+List<HijriAndGregorianDate> visibleDays = getDaysInRange(
+  HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 6, 27),null),
+  HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 31),null),
 );
 
-List<DateTime> getDaysInRange(DateTime first, DateTime last) {
-  final dayCount = last.difference(first).inDays + 1;
+List<HijriAndGregorianDate> getDaysInRange(HijriAndGregorianDate first, HijriAndGregorianDate last) {
+  final dayCount = last.gregorianDate.difference(first.gregorianDate).inDays + 1;
   return List.generate(
     dayCount,
-    (index) => DateTime.utc(first.year, first.month, first.day + index),
+    (index) => HijriAndGregorianDate.fromGregorianDate(DateTime.utc(first.gregorianDate.year, first.gregorianDate.month, first.gregorianDate.day + index),null)
   );
 }
 
@@ -35,7 +36,7 @@ void main() {
           CalendarPage(
             visibleDays: visibleDays,
             dayBuilder: (context, day) {
-              return Text('${day.day}');
+              return Text('${day.gregorianDate.day}');
             },
             dowVisible: false,
           ),
@@ -55,11 +56,11 @@ void main() {
           CalendarPage(
             visibleDays: visibleDays,
             dayBuilder: (context, day) {
-              return Text('${day.day}');
+              return Text('${day.gregorianDate.day}');
             },
             dowVisible: true,
             dowBuilder: (context, day) {
-              return Text('${day.weekday}');
+              return Text('${day.gregorianDate.weekday}');
             },
           ),
         ),
@@ -84,7 +85,7 @@ void main() {
             CalendarPage(
               visibleDays: visibleDays,
               dayBuilder: (context, day) {
-                return Text('${day.day}');
+                return Text('${day.gregorianDate.day}');
               },
               dowVisible: true,
             ),

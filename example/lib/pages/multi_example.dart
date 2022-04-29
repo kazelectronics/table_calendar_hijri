@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 class TableMultiExample extends StatefulWidget {
   @override
@@ -17,13 +18,13 @@ class _TableMultiExampleState extends State<TableMultiExample> {
   final ValueNotifier<List<Event>> _selectedEvents = ValueNotifier([]);
 
   // Using a `LinkedHashSet` is recommended due to equality comparison override
-  final Set<DateTime> _selectedDays = LinkedHashSet<DateTime>(
+  final Set<HijriAndGregorianDate> _selectedDays = LinkedHashSet<HijriAndGregorianDate>(
     equals: isSameDay,
     hashCode: getHashCode,
   );
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
+  HijriAndGregorianDate _focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null);
 
   @override
   void dispose() {
@@ -31,12 +32,12 @@ class _TableMultiExampleState extends State<TableMultiExample> {
     super.dispose();
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
+  List<Event> _getEventsForDay(HijriAndGregorianDate day) {
     // Implementation example
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForDays(Set<DateTime> days) {
+  List<Event> _getEventsForDays(Set<HijriAndGregorianDate> days) {
     // Implementation example
     // Note that days are in selection order (same applies to events)
     return [
@@ -44,7 +45,7 @@ class _TableMultiExampleState extends State<TableMultiExample> {
     ];
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  void _onDaySelected(HijriAndGregorianDate selectedDay, HijriAndGregorianDate focusedDay) {
     setState(() {
       _focusedDay = focusedDay;
       // Update values in a Set

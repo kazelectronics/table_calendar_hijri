@@ -4,15 +4,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:table_calendar/src/customization/header_style.dart';
-import 'package:table_calendar/src/shared/utils.dart';
-import 'package:table_calendar/src/widgets/calendar_header.dart';
-import 'package:table_calendar/src/widgets/custom_icon_button.dart';
-import 'package:table_calendar/src/widgets/format_button.dart';
+import 'package:table_calendar_hijri/src/customization/header_style.dart';
+import 'package:table_calendar_hijri/src/shared/utils.dart';
+import 'package:table_calendar_hijri/src/widgets/calendar_header.dart';
+import 'package:table_calendar_hijri/src/widgets/custom_icon_button.dart';
+import 'package:table_calendar_hijri/src/widgets/format_button.dart';
 
 import 'common.dart';
+import 'package:hijri/hijri_calendar.dart';
 
-final focusedMonth = DateTime.utc(2021, 7, 15);
+final focusedMonth = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
 Widget setupTestWidget({
   HeaderStyle headerStyle = const HeaderStyle(),
@@ -47,7 +48,7 @@ void main() {
     (tester) async {
       await tester.pumpWidget(setupTestWidget());
 
-      final headerText = intl.DateFormat.yMMMM().format(focusedMonth);
+      final headerText = intl.DateFormat.yMMMM().format(focusedMonth.gregorianDate);
 
       expect(find.byType(CalendarHeader), findsOneWidget);
       expect(find.text(headerText), findsOneWidget);

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:table_calendar_hijri/table_calendar.dart';
 
 import 'common.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 Widget setupTestWidget(Widget child) {
   return Directionality(
@@ -21,18 +22,18 @@ void main() {
     testWidgets(
       'in month format, starting day is Sunday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -43,17 +44,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 6, 27);
-        final lastVisibleDay = DateTime.utc(2021, 7, 31);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 6, 27),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 31),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -67,18 +68,18 @@ void main() {
     testWidgets(
       'in two weeks format, starting day is Sunday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -89,17 +90,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 7, 4);
-        final lastVisibleDay = DateTime.utc(2021, 7, 17);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 4),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 17),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -113,18 +114,18 @@ void main() {
     testWidgets(
       'in week format, starting day is Sunday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -135,17 +136,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 7, 11);
-        final lastVisibleDay = DateTime.utc(2021, 7, 17);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 11),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 17),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -159,18 +160,18 @@ void main() {
     testWidgets(
       'in month format, starting day is Monday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -181,17 +182,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 6, 28);
-        final lastVisibleDay = DateTime.utc(2021, 8, 1);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 6, 28),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 1),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -205,18 +206,18 @@ void main() {
     testWidgets(
       'in two weeks format, starting day is Monday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -227,17 +228,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 7, 5);
-        final lastVisibleDay = DateTime.utc(2021, 7, 18);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 5),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 18),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -251,18 +252,18 @@ void main() {
     testWidgets(
       'in week format, starting day is Monday',
       (tester) async {
-        final focusedDay = DateTime.utc(2021, 7, 15);
+        final focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
 
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
               focusedDay: focusedDay,
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
@@ -273,17 +274,17 @@ void main() {
           ),
         );
 
-        final firstVisibleDay = DateTime.utc(2021, 7, 12);
-        final lastVisibleDay = DateTime.utc(2021, 7, 18);
+        final firstVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 12),null);
+        final lastVisibleDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 18),null);
 
-        final focusedDayKey = dateToKey(focusedDay);
-        final firstVisibleDayKey = dateToKey(firstVisibleDay);
-        final lastVisibleDayKey = dateToKey(lastVisibleDay);
+        final focusedDayKey = dateToKey(focusedDay.gregorianDate);
+        final firstVisibleDayKey = dateToKey(firstVisibleDay.gregorianDate);
+        final lastVisibleDayKey = dateToKey(lastVisibleDay.gregorianDate);
 
         final startOOBKey =
-            dateToKey(firstVisibleDay.subtract(const Duration(days: 1)));
+            dateToKey(firstVisibleDay.gregorianDate.subtract(const Duration(days: 1)));
         final endOOBKey =
-            dateToKey(lastVisibleDay.add(const Duration(days: 1)));
+            dateToKey(lastVisibleDay.gregorianDate.add(const Duration(days: 1)));
 
         expect(find.byKey(focusedDayKey), findsOneWidget);
         expect(find.byKey(firstVisibleDayKey), findsOneWidget);
@@ -298,8 +299,8 @@ void main() {
   testWidgets(
     'Callbacks return expected values',
     (tester) async {
-      DateTime focusedDay = DateTime.utc(2021, 7, 15);
-      final nextMonth = focusedDay.add(const Duration(days: 31)).month;
+      HijriAndGregorianDate focusedDay = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null);
+      final nextMonth = focusedDay.gregorianDate.add(const Duration(days: 31)).month;
 
       bool calendarCreatedFlag = false;
       SwipeDirection? verticalSwipeDirection;
@@ -307,13 +308,13 @@ void main() {
       await tester.pumpWidget(
         setupTestWidget(
           TableCalendarBase(
-            firstDay: DateTime.utc(2021, 5, 15),
-            lastDay: DateTime.utc(2021, 8, 18),
+            firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+            lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
             focusedDay: focusedDay,
             dayBuilder: (context, day, focusedDay) {
               return Text(
-                '${day.day}',
-                key: dateToKey(day),
+                '${day.gregorianDate.day}',
+                key: dateToKey(day.gregorianDate),
               );
             },
             onCalendarCreated: (pageController) {
@@ -335,15 +336,15 @@ void main() {
 
       // Swipe left
       await tester.drag(
-        find.byKey(dateToKey(focusedDay)),
+        find.byKey(dateToKey(focusedDay.gregorianDate)),
         const Offset(-500, 0),
       );
       await tester.pumpAndSettle();
-      expect(focusedDay.month, nextMonth);
+      expect(focusedDay.gregorianDate.month, nextMonth);
 
       // Swipe up
       await tester.drag(
-        find.byKey(dateToKey(focusedDay)),
+        find.byKey(dateToKey(focusedDay.gregorianDate)),
         const Offset(0, -500),
       );
       await tester.pumpAndSettle();
@@ -358,19 +359,19 @@ void main() {
         await tester.pumpWidget(
           setupTestWidget(
             TableCalendarBase(
-              firstDay: DateTime.utc(2021, 5, 15),
-              lastDay: DateTime.utc(2021, 8, 18),
-              focusedDay: DateTime.utc(2021, 7, 15),
+              firstDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 5, 15),null),
+              lastDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 8, 18),null),
+              focusedDay: HijriAndGregorianDate.fromGregorianDate(DateTime.utc(2021, 7, 15),null),
               dayBuilder: (context, day, focusedDay) {
                 return Text(
-                  '${day.day}',
-                  key: dateToKey(day),
+                  '${day.gregorianDate.day}',
+                  key: dateToKey(day.gregorianDate),
                 );
               },
               rowHeight: 52,
               dowVisible: true,
               dowBuilder: (context, day) {
-                return Text('${day.weekday}');
+                return Text('${day.gregorianDate.weekday}');
               },
             ),
           ),
