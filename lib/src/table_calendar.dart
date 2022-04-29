@@ -207,6 +207,9 @@ class TableCalendar<T> extends StatefulWidget {
   /// Show Gregorian Dates - cannot be false when showHijriDate is false
   final bool showGregorianDate;
 
+  /// adjust Hijri calendar to match exact day
+  final int adjustHijriDateByDays;
+
   /// Creates a `TableCalendar` widget.
   TableCalendar({
     Key? key,
@@ -264,6 +267,7 @@ class TableCalendar<T> extends StatefulWidget {
     this.onCalendarCreated,
     this.showHijriDate = false,
     this.showGregorianDate = true,
+    this.adjustHijriDateByDays = 0,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
         assert(weekendDays.isNotEmpty
@@ -479,6 +483,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
                 },
                 showHijriDate: widget.showHijriDate,
                 showGregorianDate: widget.showGregorianDate,
+                adjustHijriDateByDays: widget.adjustHijriDateByDays,
               );
             },
           ),
@@ -623,6 +628,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
           locale: widget.locale,
           showHijriDate: widget.showHijriDate,
           showGregorianDate: widget.showGregorianDate,
+          adjustHijriDateByDays: widget.adjustHijriDateByDays,
         );
 
         children.add(content);

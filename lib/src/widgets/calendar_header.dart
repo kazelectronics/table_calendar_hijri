@@ -26,6 +26,7 @@ class CalendarHeader extends StatelessWidget {
   final DayBuilder? headerTitleBuilder;
   final bool? showHijriDate;
   final bool? showGregorianDate;
+  final int? adjustHijriDateByDays;
 
   const CalendarHeader({
     Key? key,
@@ -42,11 +43,12 @@ class CalendarHeader extends StatelessWidget {
     this.headerTitleBuilder,
     this.showHijriDate,
     this.showGregorianDate,
+    this.adjustHijriDateByDays,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriCalendar.now().toFormat("MMMM yyyy");
+    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriCalendar.now(adjustHijriDateByDays).toFormat("MMMM yyyy");
     final text = (showGregorianDate==null||showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
         DateFormat.yMMMM(locale).format(focusedMonth);
 
