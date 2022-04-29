@@ -250,7 +250,7 @@ class CellContent extends StatelessWidget {
                   hijriHasPreference?text:hijriText,
                   style: isWeekend
                       ? calendarStyle.weekendDualTextStyle
-                      : calendarStyle.weekendDualTextStyle,
+                      : calendarStyle.defaultDualTextStyle,
                 ),
               ],
             ),
