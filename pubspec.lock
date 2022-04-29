@@ -63,9 +63,9 @@ packages:
   hijri:
     dependency: "direct main"
     description:
-      name: hijri
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../hijri_date"
+      relative: true
+    source: path
     version: "3.0.0"
   intl:
     dependency: "direct main"

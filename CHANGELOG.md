@@ -1,3 +1,7 @@
+## [4.0.0]
+
+* Added Hijri date to calendar
+
 ## [3.0.5]
 
 * Added a visual indicator to FormatButton
