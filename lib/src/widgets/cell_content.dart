@@ -69,7 +69,7 @@ class CellContent extends StatelessWidget {
       );
     }
 
-    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriCalendar.fromDate(day,adjustHijriDateByDays).toFormat("dd");
+    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriDate.fromDate(day,adjustHijriDateByDays).toFormat("dd");
     final text = (showGregorianDate==null||showGregorianDate==false)?hijriText.isEmpty?'${day.day}':'':hijriText.isEmpty?'${day.day}':"(" + '${day.day}' + ")";
 
     final margin = calendarStyle.cellMargin;

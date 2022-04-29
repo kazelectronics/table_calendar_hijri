@@ -48,7 +48,7 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriCalendar.now(adjustHijriDateByDays).toFormat("MMMM yyyy");
+    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriDate.fromDate(focusedMonth,adjustHijriDateByDays).toFormat("MMMM yyyy");
     final text = (showGregorianDate==null||showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
         DateFormat.yMMMM(locale).format(focusedMonth);
 

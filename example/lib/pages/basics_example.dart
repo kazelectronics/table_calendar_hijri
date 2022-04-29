@@ -58,7 +58,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         headerStyle: HeaderStyle(formatButtonVisible: false),
         showHijriDate: true,
         showGregorianDate: true,
-        adjustHijriDateByDays: 2,
+        adjustHijriDateByDays: 0,
       ),
     );
   }
