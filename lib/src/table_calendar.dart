@@ -514,6 +514,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
             availableCalendarFormats: widget.availableCalendarFormats,
             simpleSwipeConfig: widget.simpleSwipeConfig,
             sixWeekMonthsEnforced: widget.sixWeekMonthsEnforced,
+            adjustHijriDateByDays: widget.adjustHijriDateByDays,
             onVerticalSwipe: _swipeCalendarFormat,
             onPageChanged: (focusedDay) {
               _focusedDay.value = focusedDay;
