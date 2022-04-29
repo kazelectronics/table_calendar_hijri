@@ -1,6 +1,7 @@
 // Copyright 2019 Aleksander Woźniak
 // SPDX-License-Identifier: Apache-2.0
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -8,6 +9,8 @@ import '../customization/header_style.dart';
 import '../shared/utils.dart' show CalendarFormat, DayBuilder;
 import 'custom_icon_button.dart';
 import 'format_button.dart';
+
+import 'package:hijri/hijri_calendar.dart';
 
 class CalendarHeader extends StatelessWidget {
   final dynamic locale;
@@ -21,6 +24,8 @@ class CalendarHeader extends StatelessWidget {
   final ValueChanged<CalendarFormat> onFormatButtonTap;
   final Map<CalendarFormat, String> availableCalendarFormats;
   final DayBuilder? headerTitleBuilder;
+  final bool? showHijriDate;
+  final bool? showGregorianDate;
 
   const CalendarHeader({
     Key? key,
@@ -35,11 +40,14 @@ class CalendarHeader extends StatelessWidget {
     required this.onFormatButtonTap,
     required this.availableCalendarFormats,
     this.headerTitleBuilder,
+    this.showHijriDate,
+    this.showGregorianDate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final text = headerStyle.titleTextFormatter?.call(focusedMonth, locale) ??
+    final hijriText = (showHijriDate==null||showHijriDate==false)?'':HijriCalendar.now().toFormat("MMMM yyyy");
+    final text = (showGregorianDate==null||showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
         DateFormat.yMMMM(locale).format(focusedMonth);
 
     return Container(
@@ -61,12 +69,36 @@ class CalendarHeader extends StatelessWidget {
                 GestureDetector(
                   onTap: onHeaderTap,
                   onLongPress: onHeaderLongPress,
-                  child: Text(
+                  child: (text.isNotEmpty && hijriText.isEmpty)? Text(
                     text,
                     style: headerStyle.titleTextStyle,
                     textAlign: headerStyle.titleCentered
                         ? TextAlign.center
                         : TextAlign.start,
+                  ):(text.isEmpty && hijriText.isNotEmpty)?Text(
+                    hijriText,
+                    style: headerStyle.titleTextStyle,
+                    textAlign: headerStyle.titleCentered
+                    ? TextAlign.center
+                        : TextAlign.start,
+                  ):Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        hijriText,
+                        style: headerStyle.titleTextStyle,
+                        textAlign: headerStyle.titleCentered
+                            ? TextAlign.center
+                            : TextAlign.start,
+                      ),
+                      Text(
+                        "( "+text+" )",
+                        style: headerStyle.dualTitleTextStyle,
+                        textAlign: headerStyle.titleCentered
+                            ? TextAlign.center
+                            : TextAlign.start,
+                      ),
+                    ],
                   ),
                 ),
           ),

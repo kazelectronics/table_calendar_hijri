@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../utils.dart';
 
 class TableBasicsExample extends StatefulWidget {
@@ -56,6 +55,9 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
           // No need to call `setState()` here
           _focusedDay = focusedDay;
         },
+        headerStyle: HeaderStyle(formatButtonVisible: false),
+        showHijriDate: true,
+        showGregorianDate: true,
       ),
     );
   }

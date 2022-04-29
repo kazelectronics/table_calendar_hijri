@@ -21,6 +21,7 @@ Highly customizable, feature-packed calendar widget for Flutter.
 * Vertical autosizing - fit the content, or fill the viewport
 * Multiple calendar formats (month, two weeks, week)
 * Horizontal swipe boundaries (first day, last day)
+* Now includes Hijri Date as well, courtesy of hijri_date package, Copyright 2018 AHMED ALJOAID
 
 ## Usage
 

@@ -201,6 +201,12 @@ class TableCalendar<T> extends StatefulWidget {
   /// Called when the calendar is created. Exposes its PageController.
   final void Function(PageController pageController)? onCalendarCreated;
 
+  /// Show Hijri Dates - cannot be false when showGregorianDate is false
+  final bool showHijriDate;
+
+  /// Show Gregorian Dates - cannot be false when showHijriDate is false
+  final bool showGregorianDate;
+
   /// Creates a `TableCalendar` widget.
   TableCalendar({
     Key? key,
@@ -256,6 +262,8 @@ class TableCalendar<T> extends StatefulWidget {
     this.onPageChanged,
     this.onFormatChanged,
     this.onCalendarCreated,
+    this.showHijriDate = false,
+    this.showGregorianDate = true,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
         assert(weekendDays.isNotEmpty
@@ -469,6 +477,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
 
                   widget.onFormatChanged?.call(format);
                 },
+                showHijriDate: widget.showHijriDate,
+                showGregorianDate: widget.showGregorianDate,
               );
             },
           ),
@@ -611,6 +621,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
           isWeekend: isWeekend,
           isHoliday: widget.holidayPredicate?.call(day) ?? false,
           locale: widget.locale,
+          showHijriDate: widget.showHijriDate,
+          showGregorianDate: widget.showGregorianDate,
         );
 
         children.add(content);
