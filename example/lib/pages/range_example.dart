@@ -66,6 +66,10 @@ class _TableRangeExampleState extends State<TableRangeExample> {
         onPageChanged: (focusedDay) {
           _focusedDay = focusedDay;
         },
+        showHijriDate: true,
+        showGregorianDate: true,
+        adjustHijriDateByDays: 0,
+        hijriHasPreference: true,
       ),
     );
   }

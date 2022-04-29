@@ -118,6 +118,10 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
             },
+            showHijriDate: true,
+            showGregorianDate: true,
+            adjustHijriDateByDays: 0,
+            hijriHasPreference: true,
           ),
           const SizedBox(height: 8.0),
           Expanded(

@@ -89,6 +89,10 @@ class _TableMultiExampleState extends State<TableMultiExample> {
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
             },
+            showHijriDate: true,
+            showGregorianDate: true,
+            adjustHijriDateByDays: 0,
+            hijriHasPreference: true,
           ),
           ElevatedButton(
             child: Text('Clear selection'),

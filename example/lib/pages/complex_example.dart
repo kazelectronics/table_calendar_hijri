@@ -160,6 +160,11 @@ class _TableComplexExampleState extends State<TableComplexExample> {
                 setState(() => _calendarFormat = format);
               }
             },
+            headerStyle: HeaderStyle(formatButtonVisible: false),
+            showHijriDate: true,
+            showGregorianDate: true,
+            adjustHijriDateByDays: 0,
+            hijriHasPreference: true,
           ),
           const SizedBox(height: 8.0),
           Expanded(
