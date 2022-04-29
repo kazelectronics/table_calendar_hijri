@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils.dart';
 import 'calendar_page.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 typedef _OnCalendarPageChanged = void Function(
     int pageIndex, DateTime focusedDay);
@@ -29,6 +30,7 @@ class CalendarCore extends StatelessWidget {
   final PageController? pageController;
   final ScrollPhysics? scrollPhysics;
   final _OnCalendarPageChanged onPageChanged;
+  final int? adjustHijriDateByDays;
 
   const CalendarCore({
     Key? key,
@@ -51,6 +53,7 @@ class CalendarCore extends StatelessWidget {
     this.rowDecoration,
     this.tableBorder,
     this.scrollPhysics,
+    this.adjustHijriDateByDays,
   })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
         super(key: key);
 
