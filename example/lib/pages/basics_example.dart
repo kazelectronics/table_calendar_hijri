@@ -63,7 +63,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         showHijriDate: true,
         showGregorianDate: true,
         adjustHijriDateByDays: adjustDays,
-        hijriHasPreference: true,
+        hijriHasPreference: false,
       ),
     );
   }

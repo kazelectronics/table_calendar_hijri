@@ -78,8 +78,8 @@ class TableCalendarBase extends StatefulWidget {
     required this.adjustHijriDateByDays,
     required this.hijriHasPreference,
   })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
-        assert(isSameDay(focusedDay, firstDay) || focusedDay.gregorianDate.isAfter(firstDay.gregorianDate)),
-        assert(isSameDay(focusedDay, lastDay) || focusedDay.gregorianDate.isBefore(lastDay.gregorianDate)),
+        assert(isSameDay(focusedDay, firstDay) || focusedDay.isAfter(firstDay,hijriHasPreference)),
+        assert(isSameDay(focusedDay, lastDay) || focusedDay.isBefore(lastDay,hijriHasPreference)),
         super(key: key);
 
   @override
@@ -282,18 +282,15 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
   }
 
   int _getMonthCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
-    final yearDif = last.gregorianDate.year - first.gregorianDate.year;
-    final monthDif = last.gregorianDate.month - first.gregorianDate.month;
-
-    return yearDif * 12 + monthDif;
+    return first.getMonthCount(last, widget.hijriHasPreference);
   }
 
   int _getWeekCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
-    return last.gregorianDate.difference(_firstDayOfWeek(first).gregorianDate).inDays ~/ 7;
+    return last.differenceInDays(_firstDayOfWeek(first),widget.hijriHasPreference) ~/ 7;
   }
 
   int _getTwoWeekCount(HijriAndGregorianDate first, HijriAndGregorianDate last) {
-    return last.gregorianDate.difference(_firstDayOfWeek(first).gregorianDate).inDays ~/ 14;
+    return last.differenceInDays(_firstDayOfWeek(first),widget.hijriHasPreference) ~/ 14;
   }
 
   int _getRowCount(CalendarFormat format, HijriAndGregorianDate focusedDay) {
@@ -307,17 +304,17 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
 
     final first = _firstDayOfMonth(focusedDay);
     final daysBefore = _getDaysBefore(first);
-    final firstToDisplay = first.gregorianDate.subtract(Duration(days: daysBefore));
+    final firstToDisplay = first.subtract(Duration(days: daysBefore),widget.hijriHasPreference);
 
     final last = _lastDayOfMonth(focusedDay);
     final daysAfter = _getDaysAfter(last);
-    final lastToDisplay = last.gregorianDate.add(Duration(days: daysAfter));
+    final lastToDisplay = last.add(Duration(days: daysAfter),widget.hijriHasPreference);
 
-    return (lastToDisplay.difference(firstToDisplay).inDays + 1) ~/ 7;
+    return (lastToDisplay.differenceInDays(firstToDisplay,widget.hijriHasPreference) + 1) ~/ 7;
   }
 
   int _getDaysBefore(HijriAndGregorianDate firstDay) {
-    return (firstDay.gregorianDate.weekday + 7 - getWeekdayNumber(widget.startingDayOfWeek)) %
+    return (firstDay.weekday() + 7 - getWeekdayNumber(widget.startingDayOfWeek)) %
         7;
   }
 
@@ -325,7 +322,7 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
     int invertedStartingWeekday =
         8 - getWeekdayNumber(widget.startingDayOfWeek);
 
-    int daysAfter = 7 - ((lastDay.gregorianDate.weekday + invertedStartingWeekday) % 7);
+    int daysAfter = 7 - ((lastDay.weekday() + invertedStartingWeekday) % 7);
     if (daysAfter == 7) {
       daysAfter = 0;
     }
@@ -335,17 +332,14 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
 
   HijriAndGregorianDate _firstDayOfWeek(HijriAndGregorianDate week) {
     final daysBefore = _getDaysBefore(week);
-    return HijriAndGregorianDate.fromGregorianDate(week.gregorianDate.subtract(Duration(days: daysBefore)),widget.adjustHijriDateByDays);
+    return week.subtract(Duration(days: daysBefore), widget.hijriHasPreference);
   }
 
   HijriAndGregorianDate _firstDayOfMonth(HijriAndGregorianDate month) {
-    return HijriAndGregorianDate.fromGregorianDate(DateTime.utc(month.gregorianDate.year, month.gregorianDate.month, 1),widget.adjustHijriDateByDays);
+    return month.firstDayOfMonth(widget.hijriHasPreference);
   }
 
   HijriAndGregorianDate _lastDayOfMonth(HijriAndGregorianDate month) {
-    final date = month.gregorianDate.month < 12
-        ? DateTime.utc(month.gregorianDate.year, month.gregorianDate.month + 1, 1)
-        : DateTime.utc(month.gregorianDate.year + 1, 1, 1);
-    return HijriAndGregorianDate.fromGregorianDate(date.subtract(const Duration(days: 1)),widget.adjustHijriDateByDays);
+    return month.lastDayOfMonth(widget.hijriHasPreference);
   }
 }
