@@ -57,13 +57,13 @@ class TableCalendar<T> extends StatefulWidget {
   /// Days after it will use `disabledStyle` and trigger `onDisabledDayTapped` callback.
   final HijriAndGregorianDate lastDay;
 
-  /// HijriAndGregorianDate that will be treated as today. Defaults to `HijriAndGregorianDate.now()`.
+  /// HijriAndGregorianDate that will be treated as today. Defaults to `DateTime.now()`.
   ///
   /// Overriding this property might be useful for testing.
   final HijriAndGregorianDate? currentDay;
 
   /// List of days treated as weekend days.
-  /// Use built-in `HijriAndGregorianDate` weekday constants (e.g. `HijriAndGregorianDate.monday`) instead of `int` literals (e.g. `1`).
+  /// Use built-in `HijriAndGregorianDate` weekday constants (e.g. `DateTime.monday`) instead of `int` literals (e.g. `1`).
   final List<int> weekendDays;
 
   /// Specifies `TableCalendar`'s current format.
@@ -372,10 +372,10 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         _firstSelectedDay = day;
         widget.onRangeSelected!(_firstSelectedDay, null, _focusedDay.value);
       } else {
-        if (day.gregorianDate.isAfter(_firstSelectedDay!.gregorianDate)) {
+        if (day.isAfter(_firstSelectedDay!,widget.hijriHasPreference)) {
           widget.onRangeSelected!(_firstSelectedDay, day, _focusedDay.value);
           _firstSelectedDay = null;
-        } else if (day.gregorianDate.isBefore(_firstSelectedDay!.gregorianDate)) {
+        } else if (day.isBefore(_firstSelectedDay!,widget.hijriHasPreference)) {
           widget.onRangeSelected!(day, _firstSelectedDay, _focusedDay.value);
           _firstSelectedDay = null;
         }
@@ -714,7 +714,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
       return true;
     }
 
-    if (day.gregorianDate.isAfter(start.gregorianDate) && day.gregorianDate.isBefore(end.gregorianDate)) {
+    if (day.isAfter(start,widget.hijriHasPreference) && day.isBefore(end,widget.hijriHasPreference)) {
       return true;
     }
 
@@ -722,8 +722,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   bool _isDayDisabled(HijriAndGregorianDate day) {
-    return day.gregorianDate.isBefore(widget.firstDay.gregorianDate) ||
-        day.gregorianDate.isAfter(widget.lastDay.gregorianDate) ||
+    return day.isBefore(widget.firstDay,widget.hijriHasPreference) ||
+        day.isAfter(widget.lastDay,widget.hijriHasPreference) ||
         !_isDayAvailable(day);
   }
 
@@ -734,36 +734,25 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   HijriAndGregorianDate _firstDayOfMonth(HijriAndGregorianDate month) {
-    return HijriAndGregorianDate.fromGregorianDate(DateTime.utc(month.gregorianDate.year, month.gregorianDate.month, 1),widget.adjustHijriDateByDays);
+    return month.firstDayOfMonth(widget.hijriHasPreference);
   }
 
   HijriAndGregorianDate _lastDayOfMonth(HijriAndGregorianDate month) {
-    final date = month.gregorianDate.month < 12
-        ? DateTime.utc(month.gregorianDate.year, month.gregorianDate.month + 1, 1)
-        : DateTime.utc(month.gregorianDate.year + 1, 1, 1);
-    return HijriAndGregorianDate.fromGregorianDate(date.subtract(const Duration(days: 1)),widget.adjustHijriDateByDays);
+    return month.lastDayOfMonth(widget.hijriHasPreference);
   }
 
   bool _isBeforeMonth(HijriAndGregorianDate day, HijriAndGregorianDate month) {
-    if (day.gregorianDate.year == month.gregorianDate.year) {
-      return day.gregorianDate.month < month.gregorianDate.month;
-    } else {
-      return day.gregorianDate.isBefore(month.gregorianDate);
-    }
+    return day.isBeforeMonth(month,widget.hijriHasPreference);
   }
 
   bool _isAfterMonth(HijriAndGregorianDate day, HijriAndGregorianDate month) {
-    if (day.gregorianDate.year == month.gregorianDate.year) {
-      return day.gregorianDate.month > month.gregorianDate.month;
-    } else {
-      return day.gregorianDate.isAfter(month.gregorianDate);
-    }
+    return day.isAfterMonth(month,widget.hijriHasPreference);
   }
 
   bool _isWeekend(
     HijriAndGregorianDate day, {
     List<int> weekendDays = const [DateTime.saturday, DateTime.sunday],
   }) {
-    return weekendDays.contains(day.gregorianDate.weekday);
+    return weekendDays.contains(day.weekday());
   }
 }
