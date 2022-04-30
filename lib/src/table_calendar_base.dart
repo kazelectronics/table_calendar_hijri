@@ -6,7 +6,7 @@ import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 
 import 'shared/utils.dart';
 import 'widgets/calendar_core.dart';
-import 'package:hijri/hijri_calendar.dart';
+import 'hijri_and_gregorian.dart';
 
 class TableCalendarBase extends StatefulWidget {
   final HijriAndGregorianDate firstDay;

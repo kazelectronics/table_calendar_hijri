@@ -6,7 +6,6 @@ import 'package:table_calendar_example/pages/basics_example.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
-import 'package:hijri/hijri_calendar.dart';
 
 class TableRangeExample extends StatefulWidget {
   @override

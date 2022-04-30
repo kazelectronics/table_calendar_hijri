@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../customization/calendar_builders.dart';
 import '../customization/calendar_style.dart';
 
-import 'package:hijri/hijri_calendar.dart';
+import '../hijri_and_gregorian.dart';
 
 class CellContent extends StatelessWidget {
   final HijriAndGregorianDate day;

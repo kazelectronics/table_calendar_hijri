@@ -15,7 +15,7 @@ import 'shared/utils.dart';
 import 'table_calendar_base.dart';
 import 'widgets/calendar_header.dart';
 import 'widgets/cell_content.dart';
-import 'package:hijri/hijri_calendar.dart';
+import 'hijri_and_gregorian.dart';
 
 /// Signature for `onDaySelected` callback. Contains the selected day and focused day.
 typedef OnDaySelected = void Function(
@@ -552,7 +552,6 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
                   ),
                 );
               }
-
               return dowCell;
             },
             dayBuilder: (context, day, focusedMonth) {

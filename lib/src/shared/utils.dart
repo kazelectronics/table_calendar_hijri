@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/widgets.dart';
-import 'package:hijri/hijri_calendar.dart';
+import '../hijri_and_gregorian.dart';
 
 /// Signature for a function that creates a widget for a given `day`.
 typedef DayBuilder = Widget? Function(BuildContext context, HijriAndGregorianDate day);

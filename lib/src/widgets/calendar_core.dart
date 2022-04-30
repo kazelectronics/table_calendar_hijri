@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils.dart';
 import 'calendar_page.dart';
-import 'package:hijri/hijri_calendar.dart';
+import '../hijri_and_gregorian.dart';
 
 typedef _OnCalendarPageChanged = void Function(
     int pageIndex, HijriAndGregorianDate focusedDay);

@@ -4,7 +4,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../shared/utils.dart' show DayBuilder, FocusedDayBuilder;
-import 'package:hijri/hijri_calendar.dart';
+import '../hijri_and_gregorian.dart';
 
 /// Signature for a function that creates a single event marker for a given `day`.
 /// Contains a single `event` associated with that `day`.

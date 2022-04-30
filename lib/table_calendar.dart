@@ -8,3 +8,4 @@ export 'src/customization/header_style.dart';
 export 'src/shared/utils.dart';
 export 'src/table_calendar.dart';
 export 'src/table_calendar_base.dart';
+export 'src/hijri_and_gregorian.dart';

@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 import '../utils.dart';
-import 'package:hijri/hijri_calendar.dart';
+
 
 class TableBasicsExample extends StatefulWidget {
   @override
