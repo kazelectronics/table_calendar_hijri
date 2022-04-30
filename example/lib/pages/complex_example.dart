@@ -5,6 +5,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar_example/pages/basics_example.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
@@ -20,7 +21,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   final ValueNotifier<HijriAndGregorianDate> _focusedDay = ValueNotifier(HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null));
   final Set<HijriAndGregorianDate> _selectedDays = LinkedHashSet<HijriAndGregorianDate>(
-    equals: isSameDay,
+    equals: _isSameDay,
     hashCode: getHashCode,
   );
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -41,6 +42,22 @@ class _TableComplexExampleState extends State<TableComplexExample> {
     _focusedDay.dispose();
     _selectedEvents.dispose();
     super.dispose();
+  }
+
+  static bool _isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b) {
+    if (a == null || b == null) {
+      return false;
+    }
+
+    if (hijriHasPreference) {
+      return a.hijriDate.hYear == b.hijriDate.hYear &&
+          a.hijriDate.hMonth == b.hijriDate.hMonth &&
+          a.hijriDate.hDay == b.hijriDate.hDay;
+    } else {
+      return a.gregorianDate.year == b.gregorianDate.year &&
+          a.gregorianDate.month == b.gregorianDate.month &&
+          a.gregorianDate.day == b.gregorianDate.day;
+    }
   }
 
   bool get canClearSelection =>

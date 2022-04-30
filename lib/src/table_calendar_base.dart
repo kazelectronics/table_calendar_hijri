@@ -78,8 +78,8 @@ class TableCalendarBase extends StatefulWidget {
     required this.adjustHijriDateByDays,
     required this.hijriHasPreference,
   })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
-        assert(isSameDay(focusedDay, firstDay) || focusedDay.isAfter(firstDay,hijriHasPreference)),
-        assert(isSameDay(focusedDay, lastDay) || focusedDay.isBefore(lastDay,hijriHasPreference)),
+        assert(isSameDay(focusedDay, firstDay,hijriHasPreference) || focusedDay.isAfter(firstDay,hijriHasPreference)),
+        assert(isSameDay(focusedDay, lastDay,hijriHasPreference) || focusedDay.isBefore(lastDay,hijriHasPreference)),
         super(key: key);
 
   @override
@@ -229,7 +229,7 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
               tableBorder: widget.tableBorder,
               onPageChanged: (index, focusedMonth) {
                 if (!_pageCallbackDisabled) {
-                  if (!isSameDay(_focusedDay, focusedMonth)) {
+                  if (!isSameDay(_focusedDay, focusedMonth,widget.hijriHasPreference)) {
                     _focusedDay = focusedMonth;
                   }
 

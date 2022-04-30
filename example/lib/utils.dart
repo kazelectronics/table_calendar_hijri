@@ -6,6 +6,9 @@ import 'dart:collection';
 import 'package:table_calendar_hijri/table_calendar.dart';
 import 'package:hijri/hijri_calendar.dart';
 
+final int adjustDays = 0;
+final bool hijriHasPreference = false;
+
 /// Example event class.
 class Event {
   final String title;
@@ -20,7 +23,7 @@ class Event {
 ///
 /// Using a [LinkedHashMap] is highly recommended if you decide to use a map.
 final kEvents = LinkedHashMap<HijriAndGregorianDate, List<Event>>(
-  equals: isSameDay,
+  equals: _isSameDay,
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
@@ -51,3 +54,19 @@ List<HijriAndGregorianDate> daysInRange(HijriAndGregorianDate first, HijriAndGre
 final kToday = HijriAndGregorianDate.fromGregorianDate(DateTime.now(),null);
 final kFirstDay = HijriAndGregorianDate.fromGregorianDate(DateTime(kToday.gregorianDate.year-1, kToday.gregorianDate.month, kToday.gregorianDate.day),null);
 final kLastDay = HijriAndGregorianDate.fromGregorianDate(DateTime(kToday.gregorianDate.year+1, kToday.gregorianDate.month, kToday.gregorianDate.day),null);
+
+bool _isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b) {
+  if (a == null || b == null) {
+    return false;
+  }
+
+  if (hijriHasPreference) {
+    return a.hijriDate.hYear == b.hijriDate.hYear &&
+      a.hijriDate.hMonth == b.hijriDate.hMonth &&
+      a.hijriDate.hDay == b.hijriDate.hDay;
+  } else {
+    return a.gregorianDate.year == b.gregorianDate.year &&
+      a.gregorianDate.month == b.gregorianDate.month &&
+      a.gregorianDate.day == b.gregorianDate.day;
+  }
+}

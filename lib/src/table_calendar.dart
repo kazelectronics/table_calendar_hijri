@@ -587,8 +587,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
             widget.rangeEndDay != null &&
             _isWithinRange(day, widget.rangeStartDay!, widget.rangeEndDay!);
 
-        final isRangeStart = isSameDay(day, widget.rangeStartDay);
-        final isRangeEnd = isSameDay(day, widget.rangeEndDay);
+        final isRangeStart = isSameDay(day, widget.rangeStartDay,widget.hijriHasPreference);
+        final isRangeEnd = isSameDay(day, widget.rangeEndDay,widget.hijriHasPreference);
 
         Widget? rangeHighlight = widget.calendarBuilders.rangeHighlightBuilder
             ?.call(context, day, isWithinRange);
@@ -614,11 +614,12 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
           children.add(rangeHighlight);
         }
 
-        final isToday = isSameDay(day, widget.currentDay);
+        final isToday = isSameDay(day, widget.currentDay,widget.hijriHasPreference);
         final isDisabled = _isDayDisabled(day);
         final isWeekend = _isWeekend(day, weekendDays: widget.weekendDays);
 
         Widget content = CellContent(
+          //key: widget.hijriHasPreference?ValueKey('CellContent-${day.hijriDate.hYear}-${day.hijriDate.hMonth}-${day.hijriDate.hDay}'):ValueKey('CellContent-${day.gregorianDate.year}-${day.gregorianDate.month}-${day.gregorianDate.day}'),
           key: ValueKey('CellContent-${day.gregorianDate.year}-${day.gregorianDate.month}-${day.gregorianDate.day}'),
           day: day,
           focusedDay: focusedDay,
@@ -710,7 +711,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   bool _isWithinRange(HijriAndGregorianDate day, HijriAndGregorianDate start, HijriAndGregorianDate end) {
-    if (isSameDay(day, start) || isSameDay(day, end)) {
+    if (isSameDay(day, start,widget.hijriHasPreference) || isSameDay(day, end,widget.hijriHasPreference)) {
       return true;
     }
 

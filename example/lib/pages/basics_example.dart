@@ -6,8 +6,6 @@ import 'package:table_calendar_hijri/table_calendar.dart';
 import '../utils.dart';
 import 'package:hijri/hijri_calendar.dart';
 
-final int adjustDays = 0;
-
 class TableBasicsExample extends StatefulWidget {
   @override
   _TableBasicsExampleState createState() => _TableBasicsExampleState();
@@ -36,10 +34,10 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
 
           // Using `isSameDay` is recommended to disregard
           // the time-part of compared DateTime objects.
-          return isSameDay(_selectedDay, day);
+          return isSameDay(_selectedDay, day, hijriHasPreference);
         },
         onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
+          if (!isSameDay(_selectedDay, selectedDay,hijriHasPreference)) {
             // Call `setState()` when updating the selected day
             setState(() {
               _selectedDay = selectedDay;
@@ -63,7 +61,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         showHijriDate: true,
         showGregorianDate: true,
         adjustHijriDateByDays: adjustDays,
-        hijriHasPreference: false,
+        hijriHasPreference: hijriHasPreference,
       ),
     );
   }

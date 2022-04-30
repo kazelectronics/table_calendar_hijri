@@ -164,15 +164,13 @@ class CalendarCore extends StatelessWidget {
 
     switch (format) {
       case CalendarFormat.month:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month + pageDif),adjustHijriDateByDays);
+        day = prevFocusedDay.getDateAnOffsetAway(0,pageDif,0,hijriHasPreference);
         break;
       case CalendarFormat.twoWeeks:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month,
-            prevFocusedDay.gregorianDate.day + pageDif * 14),adjustHijriDateByDays);
+        day = prevFocusedDay.getDateAnOffsetAway(0,0,pageDif * 14,hijriHasPreference);
         break;
       case CalendarFormat.week:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(prevFocusedDay.gregorianDate.year, prevFocusedDay.gregorianDate.month,
-            prevFocusedDay.gregorianDate.day + pageDif * 7),adjustHijriDateByDays);
+        day = prevFocusedDay.getDateAnOffsetAway(0,0,pageDif * 7,hijriHasPreference);
         break;
     }
 
@@ -190,15 +188,13 @@ class CalendarCore extends StatelessWidget {
 
     switch (format) {
       case CalendarFormat.month:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(firstDay.gregorianDate.year, firstDay.gregorianDate.month + pageIndex),adjustHijriDateByDays);
+        day = firstDay.getDateAnOffsetAway(0,pageIndex,0,hijriHasPreference);
         break;
       case CalendarFormat.twoWeeks:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(
-            firstDay.gregorianDate.year, firstDay.gregorianDate.month, firstDay.gregorianDate.day + pageIndex * 14),adjustHijriDateByDays);
+        day = firstDay.getDateAnOffsetAway(0,0,pageIndex * 14,hijriHasPreference);
         break;
       case CalendarFormat.week:
-        day = HijriAndGregorianDate.fromGregorianDate(DateTime.utc(
-            firstDay.gregorianDate.year, firstDay.gregorianDate.month, firstDay.gregorianDate.day + pageIndex * 7),adjustHijriDateByDays);
+        day = firstDay.getDateAnOffsetAway(0,0,pageIndex * 7,hijriHasPreference);
         break;
     }
 
@@ -259,7 +255,7 @@ class CalendarCore extends StatelessWidget {
     final dayCount = last.differenceInDays(first, hijriHasPreference) + 1;
     return List.generate(
       dayCount,
-      (index) => HijriAndGregorianDate.fromGregorianDate(DateTime.utc(first.gregorianDate.year, first.gregorianDate.month, first.gregorianDate.day + index),adjustHijriDateByDays),
+      (index) => first.getDateAnOffsetAway(0,0,index,hijriHasPreference),
     );
   }
 

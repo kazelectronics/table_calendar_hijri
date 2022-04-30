@@ -4,6 +4,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:table_calendar_example/pages/basics_example.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
@@ -19,7 +20,7 @@ class _TableMultiExampleState extends State<TableMultiExample> {
 
   // Using a `LinkedHashSet` is recommended due to equality comparison override
   final Set<HijriAndGregorianDate> _selectedDays = LinkedHashSet<HijriAndGregorianDate>(
-    equals: isSameDay,
+    equals: _isSameDay,
     hashCode: getHashCode,
   );
 
@@ -30,6 +31,22 @@ class _TableMultiExampleState extends State<TableMultiExample> {
   void dispose() {
     _selectedEvents.dispose();
     super.dispose();
+  }
+
+  static bool _isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b) {
+    if (a == null || b == null) {
+      return false;
+    }
+
+    if (hijriHasPreference) {
+      return a.hijriDate.hYear == b.hijriDate.hYear &&
+          a.hijriDate.hMonth == b.hijriDate.hMonth &&
+          a.hijriDate.hDay == b.hijriDate.hDay;
+    } else {
+      return a.gregorianDate.year == b.gregorianDate.year &&
+          a.gregorianDate.month == b.gregorianDate.month &&
+          a.gregorianDate.day == b.gregorianDate.day;
+    }
   }
 
   List<Event> _getEventsForDay(HijriAndGregorianDate day) {

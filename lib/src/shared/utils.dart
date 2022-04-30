@@ -46,15 +46,18 @@ HijriAndGregorianDate normalizeDate(HijriAndGregorianDate date, int? offset) {
 
 /// Checks if two DateTime objects are the same day.
 /// Returns `false` if either of them is null.
-bool isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b) {
+bool isSameDay(HijriAndGregorianDate? a, HijriAndGregorianDate? b, bool _hijriHasPreference) {
   if (a == null || b == null) {
     return false;
   }
 
-  return a.gregorianDate.year == b.gregorianDate.year &&
-      a.gregorianDate.month == b.gregorianDate.month &&
-      a.gregorianDate.day == b.gregorianDate.day &&
-      a.hijriDate.hYear == b.hijriDate.hYear &&
-      a.hijriDate.hMonth == b.hijriDate.hMonth &&
-      a.hijriDate.hDay == b.hijriDate.hDay;
+  if (_hijriHasPreference) {
+    return a.hijriDate.hYear == b.hijriDate.hYear &&
+        a.hijriDate.hMonth == b.hijriDate.hMonth &&
+        a.hijriDate.hDay == b.hijriDate.hDay;
+  } else {
+    return a.gregorianDate.year == b.gregorianDate.year &&
+        a.gregorianDate.month == b.gregorianDate.month &&
+        a.gregorianDate.day == b.gregorianDate.day;
+  }
 }

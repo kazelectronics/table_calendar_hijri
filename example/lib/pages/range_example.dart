@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/material.dart';
+import 'package:table_calendar_example/pages/basics_example.dart';
 import 'package:table_calendar_hijri/table_calendar.dart';
 
 import '../utils.dart';
@@ -31,13 +32,13 @@ class _TableRangeExampleState extends State<TableRangeExample> {
         firstDay: kFirstDay,
         lastDay: kLastDay,
         focusedDay: _focusedDay,
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+        selectedDayPredicate: (day) => isSameDay(_selectedDay, day,hijriHasPreference),
         rangeStartDay: _rangeStart,
         rangeEndDay: _rangeEnd,
         calendarFormat: _calendarFormat,
         rangeSelectionMode: _rangeSelectionMode,
         onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
+          if (!isSameDay(_selectedDay, selectedDay,hijriHasPreference)) {
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
