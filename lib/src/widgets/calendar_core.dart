@@ -164,13 +164,13 @@ class CalendarCore extends StatelessWidget {
 
     switch (format) {
       case CalendarFormat.month:
-        day = prevFocusedDay.getDateAnOffsetAway(0,pageDif,0,hijriHasPreference);
+        day = prevFocusedDay.getDateAnOffsetMonthsAway(pageDif,hijriHasPreference);
         break;
       case CalendarFormat.twoWeeks:
-        day = prevFocusedDay.getDateAnOffsetAway(0,0,pageDif * 14,hijriHasPreference);
+        day = prevFocusedDay.getDateAnOffsetDaysAway(pageDif * 14,hijriHasPreference);
         break;
       case CalendarFormat.week:
-        day = prevFocusedDay.getDateAnOffsetAway(0,0,pageDif * 7,hijriHasPreference);
+        day = prevFocusedDay.getDateAnOffsetDaysAway(pageDif * 7,hijriHasPreference);
         break;
     }
 
@@ -188,13 +188,13 @@ class CalendarCore extends StatelessWidget {
 
     switch (format) {
       case CalendarFormat.month:
-        day = firstDay.getDateAnOffsetAway(0,pageIndex,0,hijriHasPreference);
+        day = firstDay.getDateAnOffsetMonthsAway(pageIndex,hijriHasPreference);
         break;
       case CalendarFormat.twoWeeks:
-        day = firstDay.getDateAnOffsetAway(0,0,pageIndex * 14,hijriHasPreference);
+        day = firstDay.getDateAnOffsetDaysAway(pageIndex * 14,hijriHasPreference);
         break;
       case CalendarFormat.week:
-        day = firstDay.getDateAnOffsetAway(0,0,pageIndex * 7,hijriHasPreference);
+        day = firstDay.getDateAnOffsetDaysAway(pageIndex * 7,hijriHasPreference);
         break;
     }
 
@@ -255,7 +255,7 @@ class CalendarCore extends StatelessWidget {
     final dayCount = last.differenceInDays(first, hijriHasPreference) + 1;
     return List.generate(
       dayCount,
-      (index) => first.getDateAnOffsetAway(0,0,index,hijriHasPreference),
+      (index) => first.getDateAnOffsetDaysAway(index,hijriHasPreference),
     );
   }
 

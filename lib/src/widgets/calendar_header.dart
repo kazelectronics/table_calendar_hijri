@@ -50,9 +50,8 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hijriText = (showHijriDate==false)?'':focusedMonth.hijriDate.toFormat("MMMM yyyy");
-    final text = (showGregorianDate==false)&&(hijriText.isNotEmpty)?'':headerStyle.titleTextFormatter?.call(focusedMonth, locale)??
-        DateFormat.yMMMM(locale).format(focusedMonth.gregorianDate);
+    final hijriText = (showHijriDate==false)?'':focusedMonth.getHijriMonthHeader(_firstDayOfMonth(focusedMonth),_lastDayOfMonth(focusedMonth),hijriHasPreference);
+    final text = (showGregorianDate==false)&&(hijriText.isNotEmpty)?'':focusedMonth.getGregorianMonthHeader(locale, _firstDayOfMonth(focusedMonth),_lastDayOfMonth(focusedMonth),hijriHasPreference);
 
     return Container(
       decoration: headerStyle.decoration,
@@ -130,5 +129,13 @@ class CalendarHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  HijriAndGregorianDate _firstDayOfMonth(HijriAndGregorianDate month) {
+    return month.firstDayOfMonth(hijriHasPreference);
+  }
+
+  HijriAndGregorianDate _lastDayOfMonth(HijriAndGregorianDate month) {
+    return month.lastDayOfMonth(hijriHasPreference);
   }
 }

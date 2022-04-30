@@ -57,9 +57,10 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
           // No need to call `setState()` here
           _focusedDay = focusedDay;
         },
+        startingDayOfWeek: StartingDayOfWeek.monday,
         headerStyle: HeaderStyle(formatButtonVisible: false),
-        showHijriDate: true,
-        showGregorianDate: true,
+        showHijriDate: showHijriDate,
+        showGregorianDate: showGregorianDate,
         adjustHijriDateByDays: adjustDays,
         hijriHasPreference: hijriHasPreference,
       ),

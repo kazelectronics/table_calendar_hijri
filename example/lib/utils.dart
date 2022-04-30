@@ -3,10 +3,11 @@
 
 import 'dart:collection';
 
-import 'package:table_calendar_hijri/table_calendar.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 final int adjustDays = 0;
+final bool showHijriDate = false;
+final bool showGregorianDate = true;
 final bool hijriHasPreference = false;
 
 /// Example event class.

@@ -208,6 +208,7 @@ class TableCalendar<T> extends StatefulWidget {
   /// Show Gregorian Dates - cannot be false when showHijriDate is false
   final bool showGregorianDate;
 
+  /// Hijri should be used to match the rows in the calendar
   final bool hijriHasPreference;
 
   /// adjust Hijri calendar to match exact day
