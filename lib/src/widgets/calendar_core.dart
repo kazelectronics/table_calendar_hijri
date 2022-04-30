@@ -30,7 +30,10 @@ class CalendarCore extends StatelessWidget {
   final PageController? pageController;
   final ScrollPhysics? scrollPhysics;
   final _OnCalendarPageChanged onPageChanged;
-  final int? adjustHijriDateByDays;
+  final bool showHijriDate;
+  final bool showGregorianDate;
+  final bool hijriHasPreference;
+  final int adjustHijriDateByDays;
 
   const CalendarCore({
     Key? key,
@@ -53,7 +56,10 @@ class CalendarCore extends StatelessWidget {
     this.rowDecoration,
     this.tableBorder,
     this.scrollPhysics,
-    this.adjustHijriDateByDays,
+    required this.showHijriDate,
+    required this.showGregorianDate,
+    required this.adjustHijriDateByDays,
+    required this.hijriHasPreference,
   })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
         super(key: key);
 
@@ -80,6 +86,10 @@ class CalendarCore extends StatelessWidget {
           dowDecoration: dowDecoration,
           rowDecoration: rowDecoration,
           tableBorder: tableBorder,
+          showHijriDate: showHijriDate,
+          showGregorianDate: showGregorianDate,
+          adjustHijriDateByDays: adjustHijriDateByDays,
+          hijriHasPreference: hijriHasPreference,
           dowBuilder: (context, day) {
             return SizedBox(
               height: dowHeight,

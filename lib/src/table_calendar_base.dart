@@ -34,7 +34,10 @@ class TableCalendarBase extends StatefulWidget {
   final SwipeCallback? onVerticalSwipe;
   final void Function(HijriAndGregorianDate focusedDay)? onPageChanged;
   final void Function(PageController pageController)? onCalendarCreated;
-  final int? adjustHijriDateByDays;
+  final bool showHijriDate;
+  final bool showGregorianDate;
+  final bool hijriHasPreference;
+  final int adjustHijriDateByDays;
 
   TableCalendarBase({
     Key? key,
@@ -70,7 +73,10 @@ class TableCalendarBase extends StatefulWidget {
     this.onVerticalSwipe,
     this.onPageChanged,
     this.onCalendarCreated,
-    this.adjustHijriDateByDays,
+    required this.showHijriDate,
+    required this.showGregorianDate,
+    required this.adjustHijriDateByDays,
+    required this.hijriHasPreference,
   })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
         assert(isSameDay(focusedDay, firstDay) || focusedDay.gregorianDate.isAfter(firstDay.gregorianDate)),
         assert(isSameDay(focusedDay, lastDay) || focusedDay.gregorianDate.isBefore(lastDay.gregorianDate)),
@@ -245,7 +251,10 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
               },
               dowBuilder: widget.dowBuilder,
               dayBuilder: widget.dayBuilder,
+              showHijriDate: widget.showHijriDate,
+              showGregorianDate: widget.showGregorianDate,
               adjustHijriDateByDays: widget.adjustHijriDateByDays,
+              hijriHasPreference: widget.hijriHasPreference,
             ),
           ),
         );

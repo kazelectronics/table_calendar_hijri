@@ -519,12 +519,15 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
             availableCalendarFormats: widget.availableCalendarFormats,
             simpleSwipeConfig: widget.simpleSwipeConfig,
             sixWeekMonthsEnforced: widget.sixWeekMonthsEnforced,
-            adjustHijriDateByDays: widget.adjustHijriDateByDays,
             onVerticalSwipe: _swipeCalendarFormat,
             onPageChanged: (focusedDay) {
               _focusedDay.value = focusedDay;
               widget.onPageChanged?.call(focusedDay);
             },
+            showHijriDate: widget.showHijriDate,
+            showGregorianDate: widget.showGregorianDate,
+            adjustHijriDateByDays: widget.adjustHijriDateByDays,
+            hijriHasPreference: widget.hijriHasPreference,
             dowBuilder: (BuildContext context, HijriAndGregorianDate day) {
               Widget? dowCell =
                   widget.calendarBuilders.dowBuilder?.call(context, day);

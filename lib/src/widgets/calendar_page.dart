@@ -12,6 +12,10 @@ class CalendarPage extends StatelessWidget {
   final Decoration? rowDecoration;
   final TableBorder? tableBorder;
   final bool dowVisible;
+  final bool showHijriDate;
+  final bool showGregorianDate;
+  final bool hijriHasPreference;
+  final int adjustHijriDateByDays;
 
   const CalendarPage({
     Key? key,
@@ -22,6 +26,10 @@ class CalendarPage extends StatelessWidget {
     this.rowDecoration,
     this.tableBorder,
     this.dowVisible = true,
+    required this.showHijriDate,
+    required this.showGregorianDate,
+    required this.adjustHijriDateByDays,
+    required this.hijriHasPreference,
   })  : assert(!dowVisible || dowBuilder != null),
         super(key: key);
 
