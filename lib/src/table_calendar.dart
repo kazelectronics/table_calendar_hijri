@@ -356,7 +356,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   void _onDayTapped(HijriAndGregorianDate day) {
-    final isOutside = day.gregorianDate.month != _focusedDay.value.gregorianDate.month;
+    final isOutside = day.isOutsideMonth(_focusedDay.value, widget.hijriHasPreference);
     if (isOutside && _shouldBlockOutsideDays) {
       return;
     }
@@ -386,7 +386,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   void _onDayLongPressed(HijriAndGregorianDate day) {
-    final isOutside = day.gregorianDate.month != _focusedDay.value.gregorianDate.month;
+    final isOutside = day.isOutsideMonth(_focusedDay.value, widget.hijriHasPreference);
     if (isOutside && _shouldBlockOutsideDays) {
       return;
     }
@@ -569,7 +569,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   Widget _buildCell(HijriAndGregorianDate day, HijriAndGregorianDate focusedDay) {
-    final isOutside = day.gregorianDate.month != focusedDay.gregorianDate.month;
+    final isOutside = day.isOutsideMonth(focusedDay, widget.hijriHasPreference);
 
     if (isOutside && _shouldBlockOutsideDays) {
       return Container();
